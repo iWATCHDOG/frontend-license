@@ -69,7 +69,7 @@ export const request: RequestConfig = {
     if (code === 40100 && !path.includes('user/get/login') && !location.pathname.includes('/user/login')) {
       // 跳转至登录页
       // window.location.href = `/user/login?redirect=${window.location.href}`;
-      throw new Error('未登录 请求ID: ${requestId}');
+      throw new Error(`${data.message} 请求ID: ${requestId}`);
     }
     if (code !== 20000) {
       throw new Error(`${data.message} 请求ID: ${requestId}`);

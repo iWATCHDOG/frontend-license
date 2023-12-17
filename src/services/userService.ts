@@ -1,4 +1,5 @@
 import { request } from '@umijs/max';
+import { RcFile } from 'antd/es/upload';
 
 /**
  * 获取当前登录用户
@@ -85,5 +86,72 @@ export async function emailForget(email: string) {
       'Content-Type': 'application/json',
     },
     params: { email },
+  });
+}
+
+/**
+ * 检查token
+ */
+export async function checkForgetPasswordToken(token: string) {
+  return request<BaseResponse<boolean>>('/user/check/forget', {
+    method: 'GET',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    params: { token },
+  });
+}
+
+/**
+ * 重置密码
+ */
+export async function forgetPasswordB(password: string, token: string) {
+  return request<BaseResponse<boolean>>('/user/forget/password', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'forgetToken': token,
+    },
+    params: { password },
+  });
+}
+
+/**
+ * 更新用户资料
+ */
+export async function updateUserProfile(params: UserType.UpdateUserProfileRequest) {
+  return request<BaseResponse<boolean>>('/user/update/profile', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    params: params,
+  });
+}
+
+/**
+ * 更新用户头像
+ */
+export async function updateUserAvatar(avatar: RcFile) {
+  const formData = new FormData();
+  formData.append('avatar', avatar);
+  return request<BaseResponse<boolean>>('/user/upload/avatar', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    data: formData,
+  });
+}
+
+/**
+ * 注销用户
+ */
+export async function deleteUser() {
+  return request<BaseResponse<boolean>>('/user', {
+    method: 'DELETE',
+    headers: {
+      'Content-Type': 'application/json',
+    },
   });
 }

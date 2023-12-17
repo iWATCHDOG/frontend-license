@@ -22,9 +22,23 @@ export default [{
     path: '/user/forget',
     component: 'user/forget',
   }, {
+    name: '忘记密码',
+    path: '/user/forget/:token',
+    component: 'user/forget',
+  }, {
     name: '用户注册',
     path: '/user/register',
     component: 'user/register',
+  }, {
+    name: '设置',
+    access: 'canUser',
+    path: '/user/settings',
+    component: 'user/settings',
+  }, {
+    name: '设置',
+    access: 'canUser',
+    path: '/user/settings/:type',
+    component: 'user/settings',
   }],
 }, {
   name: '404',

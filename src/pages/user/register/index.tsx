@@ -2,7 +2,7 @@ import { FileTextOutlined, LockOutlined, MailOutlined, PhoneOutlined, UserOutlin
 import { LoginForm, ProFormCaptcha, ProFormText } from '@ant-design/pro-components';
 import { useModel } from '@umijs/max';
 import { message, Tabs } from 'antd';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { DEFAULT_NAME } from '@/constants';
 import { Link } from '@@/exports';
 import { emailCodeRequest, userLogin, userRegister } from '@/services/userService';
@@ -44,6 +44,15 @@ export default () => {
     }
   };
 
+  useEffect(() => {
+    // 判断是否已经登录
+    if (initialState?.loginUser) {
+      message.error('您已经登录，即将跳转到首页');
+      setTimeout(() => {
+        window.location.href = '/';
+      }, 300);
+    }
+  }, []);
   // @ts-ignore
   return (<div
     style={{
@@ -77,6 +86,7 @@ export default () => {
         fieldProps={{
           size: 'large',
           prefix: <UserOutlined className={'prefixIcon'} />,
+          autoComplete: 'new-password',
         }}
         placeholder={'请输入用户名'}
         rules={[
@@ -85,7 +95,7 @@ export default () => {
             message: '请输入用户名!',
           }, {
             pattern: /^[a-zA-Z0-9_-]{1,16}$/,
-            message: '用户名必须是4-16位字母、数字、下划线、减号组成',
+            message: '用户名必须是1-16位字母、数字、下划线、减号组成',
           },
         ]}
       />
@@ -94,6 +104,7 @@ export default () => {
         fieldProps={{
           size: 'large',
           prefix: <LockOutlined className={'prefixIcon'} />,
+          autoComplete: 'new-password',
         }}
         placeholder={'请输入密码'}
         rules={[{

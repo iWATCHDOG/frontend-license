@@ -38,12 +38,14 @@ const AvatarDropdown: React.FC = () => {
         ...initialState,
         loginUser: undefined,
       });
-      history.replace({
-        pathname: '/user/login',
-        search: stringify({
-          redirect: window.location.href,
-        }),
-      });
+      setTimeout(() => {
+        history.replace({
+          pathname: '/user/login',
+          search: stringify({
+            redirect: window.location.href,
+          }),
+        });
+      }, 300);
       return;
     } else if (key === 'settings') {
       navigate('/user/settings');

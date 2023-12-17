@@ -1,10 +1,10 @@
 import { userLogin } from '@/services/userService';
 import { GithubOutlined, LockOutlined, UserOutlined } from '@ant-design/icons';
-import { LoginForm, ProFormText } from '@ant-design/pro-components';
+import { LoginForm, ProFormInstance, ProFormText } from '@ant-design/pro-components';
 import { useModel } from '@umijs/max';
 import { Checkbox, message, Modal, Space } from 'antd';
 import { useSearchParams } from 'umi';
-import React, { CSSProperties, useState } from 'react';
+import React, { CSSProperties, useEffect, useRef, useState } from 'react';
 import { BASE_URL, DEFAULT_NAME } from '@/constants';
 import { Link } from '@@/exports';
 
@@ -16,6 +16,7 @@ import type { CheckboxChangeEvent } from 'antd/es/checkbox';
 export default () => {
   const [searchParams] = useSearchParams();
   const [checked, setChecked] = useState(false);
+  const formRef = useRef<ProFormInstance>();
 
   const onChange = (e: CheckboxChangeEvent) => {
     setChecked(e.target.checked);
@@ -55,6 +56,16 @@ export default () => {
     }
   };
 
+  useEffect(() => {
+    // 判断是否已经登录
+    if (initialState?.loginUser) {
+      message.error('您已经登录，即将跳转到首页');
+      setTimeout(() => {
+        window.location.href = '/';
+      }, 1000);
+    }
+  }, []);
+
   // @ts-ignore
   return (<div
     style={{
@@ -66,6 +77,7 @@ export default () => {
     <LoginForm<UserType.UserLoginRequest>
       title="登录"
       subTitle={DEFAULT_NAME}
+      formRef={formRef}
       actions={
         <Space>
           其他登录方式
@@ -85,7 +97,9 @@ export default () => {
             onOk() {
               // 设置同意用户协议
               setChecked(true);
-              doUserLogin(formData);
+              // 提交
+              formRef.current?.submit();
+
             },
             onCancel() {
               message.error('您未同意用户协议，无法登录');

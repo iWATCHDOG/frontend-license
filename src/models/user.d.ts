@@ -46,4 +46,9 @@ declare namespace UserType {
     phone?: string;
     code: string;
   }
+
+  interface UpdateUserProfileRequest {
+    username?: string;
+    gender?: number;
+  }
 }
