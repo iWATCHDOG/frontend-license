@@ -10,7 +10,7 @@ import { Content } from 'antd/es/layout/layout';
 import ProfileComponent from '@/pages/user/settings/components/ProfileComponent';
 import { RcFile, UploadChangeParam, UploadFile } from 'antd/es/upload';
 import { updateUserAvatar } from '@/services/userService';
-import AccountCompnoent from '@/pages/user/settings/components/AccountComponent';
+import AccountComponent from '@/pages/user/settings/components/AccountComponent';
 
 const { Text, Link } = Typography;
 
@@ -97,7 +97,7 @@ export default () => {
             <Content style={{ margin: '24px 16px 0' }}>
               <div style={{ minHeight: 360 }}>
                 {selectedKeys[0] === '1' && (<ProfileComponent />)}
-                {selectedKeys[0] === '2' && (<AccountCompnoent />)}
+                {selectedKeys[0] === '2' && (<AccountComponent />)}
               </div>
             </Content>
             {selectedKeys[0] === '1' && (

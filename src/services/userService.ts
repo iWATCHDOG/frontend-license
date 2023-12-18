@@ -155,3 +155,33 @@ export async function deleteUser() {
     },
   });
 }
+
+export async function getOAuthInfo(type: number) {
+  return request<BaseResponse<string>>('/oauth/info', {
+    method: 'GET',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    params: { type },
+  });
+}
+
+export async function unBindOAuth(type: number) {
+  return request<BaseResponse<boolean>>('/oauth/unbind', {
+    method: 'DELETE',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    params: { type },
+  });
+}
+
+export async function bindOAuth(type: number) {
+  return request<BaseResponse<string>>('/oauth/bind', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    params: { type },
+  });
+}
