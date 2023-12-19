@@ -26,6 +26,7 @@ declare namespace UserType {
     gender?: number;
     avatar?: string;
     status?: number;
+    token?: string;
     createTime?: Date;
     updateTime?: Date;
   }

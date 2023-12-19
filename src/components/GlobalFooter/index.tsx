@@ -39,30 +39,31 @@ const GlobalFooter: React.FC = () => {
     doPing();
   }, []);
   // noinspection HtmlRequiredAltAttribute
-  return (
-    <DefaultFooter
-      className="default-footer"
-      copyright={`${currentYear} ` + DEFAULT_NAME}
-      links={[
-        {
-          key: 'xLikeWATCHDOG',
-          title: (
-            <>
-              <GithubOutlined /> xLikeWATCHDOG
-            </>
-          ),
-          href: 'https://github.com/xLikeWATCHDOG',
-          blankTarget: true,
-        }, {
-          key: 'ping',
-          title: (
-            <>
-              <WifiOutlined /> {ping === -1 ? '服务器连接失败' : `延迟${ping}ms`}
-            </>
-          ),
-          href: '',
-        }]}
-    />
+  return (<>
+      <DefaultFooter
+        className="default-footer"
+        copyright={`${currentYear} ` + DEFAULT_NAME}
+        links={[
+          {
+            key: 'xLikeWATCHDOG',
+            title: (
+              <>
+                <GithubOutlined /> xLikeWATCHDOG
+              </>
+            ),
+            href: 'https://github.com/xLikeWATCHDOG',
+            blankTarget: true,
+          }, {
+            key: 'ping',
+            title: (
+              <>
+                <WifiOutlined /> {ping === -1 ? '服务器连接失败' : `延迟${ping}ms`}
+              </>
+            ),
+            href: '',
+          }]}
+      />
+    </>
   );
 };
 

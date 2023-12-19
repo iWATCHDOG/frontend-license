@@ -8,3 +8,12 @@ export async function getPing() {
     },
   });
 }
+
+export async function getNotifyList() {
+  return request<BaseResponse<RootType.NotifyResponse[]>>('/notify', {
+    method: 'GET',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+  });
+}

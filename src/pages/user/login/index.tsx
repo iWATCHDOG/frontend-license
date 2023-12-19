@@ -47,6 +47,10 @@ export default () => {
         ...initialState,
         loginUser: res.data,
       } as InitialState);
+      // 写入 token
+      let date = new Date();
+      date.setDate(date.getDate() + 7);
+      document.cookie = `loginToken=${res.data.token}; expires=${date.toUTCString()};`;
       // 重定向到之前页面
       window.location.href = searchParams.get('redirect') ?? '/';
     } catch (e: any) {

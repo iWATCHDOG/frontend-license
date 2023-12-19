@@ -50,6 +50,16 @@ export async function userLogin(params: UserType.UserLoginRequest) {
   });
 }
 
+export async function userLoginByToken(token: string) {
+  return request<BaseResponse<UserType.UserVO>>('/user/login/token', {
+    method: 'GET',
+    headers: {
+      'Content-Type': 'application/json',
+      'loginToken': token,
+    },
+  });
+}
+
 /**
  * 邮箱验证码请求
  */

@@ -1,9 +1,21 @@
 import { RequestConfig } from '@@/plugin-request/request';
 import { RunTimeLayoutConfig } from '@@/plugin-layout/types';
 import { BASE_URL, DEFAULT_NAME } from '@/constants';
-import { getLoginUser, getLoginUserMaxGroup } from '@/services/userService';
+import { getLoginUser, getLoginUserMaxGroup, userLoginByToken } from '@/services/userService';
 import GlobalFooter from '@/components/GlobalFooter';
 import RightContent from '@/components/GlobalHeader/RightContent';
+
+
+function getCookie(name: string) {
+  let cookieArr = document.cookie.split('; ');
+  for (let i = 0; i < cookieArr.length; i++) {
+    let cookiePair = cookieArr[i].split('=');
+    if (name === cookiePair[0]) {
+      return cookiePair[1];
+    }
+  }
+  return null;
+}
 
 // 运行时配置
 /**
@@ -15,13 +27,37 @@ export async function getInitialState(): Promise<InitialState> {
     loginUser: undefined,
     group: undefined,
   };
+
+  function refreshToken(token?: string) {
+    // 刷新cookie
+    let date = new Date();
+    date.setDate(date.getDate() + 7);
+    document.cookie = `loginToken=${token}; expires=${date.toUTCString()};`;
+  }
+
   // 获取当前登录用户
   try {
     const res = await getLoginUser();
     defaultState.loginUser = res.data;
+    refreshToken(res.data.token);
+  } catch (e) {
+    // 未登录时
+    const token = getCookie('loginToken');
+    if (token) {
+      // 有cookie，进行cookie登录
+      try {
+        const res = await userLoginByToken(token);
+        defaultState.loginUser = res.data;
+        refreshToken(res.data.token);
+      } catch (e) {
+      }
+    }
+  }
+  try {
     const per = await getLoginUserMaxGroup();
     defaultState.group = per.data;
   } catch (ignore) {
+
   }
   return defaultState;
 }
