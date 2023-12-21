@@ -5,4 +5,10 @@ declare namespace RootType {
     content: string;
     type: number;
   }
+
+  interface NotifyRequest {
+    title: string;
+    content: string;
+    type: number;
+  }
 }

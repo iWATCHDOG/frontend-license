@@ -29,10 +29,31 @@ const GlobalFooter: React.FC = () => {
 
   const doPing = async () => {
     await initPing();
-    // 每隔5秒ping一次
     setInterval(async () => {
       await initPing();
-    }, 5000);
+    }, 3000);
+  };
+
+  const formatPing = (ping: number) => {
+    if (ping === -1) {
+      return 'Time out';
+    }
+    // 如果ping大于1000ms，显示秒
+    if (ping > 1000) {
+      return `${(ping / 1000).toFixed(2)}s`;
+    }
+    return `${ping}ms`;
+  };
+
+  const getWifiStyle = (ping: number) => {
+    if (ping === -1 || ping > 1000) {
+      return { color: '#ff4d4f' };
+    }
+    // 如果ping大于500显示橙色
+    if (ping > 500) {
+      return { color: '#faad14' };
+    }
+    return { color: '#52c41a' };
   };
 
   useEffect(() => {
@@ -54,10 +75,12 @@ const GlobalFooter: React.FC = () => {
             href: 'https://github.com/xLikeWATCHDOG',
             blankTarget: true,
           }, {
-            key: 'ping',
+            key: ping === -1 ? 'Time out' : formatPing(ping),
             title: (
               <>
-                <WifiOutlined /> {ping === -1 ? '服务器连接失败' : `延迟${ping}ms`}
+                <WifiOutlined style={getWifiStyle(ping)} />
+                {/*有颜色的字体*/}
+                <span style={getWifiStyle(ping)}>{formatPing(ping)}</span>
               </>
             ),
             href: '',

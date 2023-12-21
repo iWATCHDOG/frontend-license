@@ -39,6 +39,10 @@ export default [{
     access: 'canUser',
     path: '/user/settings/:type',
     component: 'user/settings',
+  }, {
+    name: '用户主页',
+    path: '/user/:var',
+    component: 'user/profile',
   }],
 }, {
   name: '404',

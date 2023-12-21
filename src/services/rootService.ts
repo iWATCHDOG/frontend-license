@@ -17,3 +17,13 @@ export async function getNotifyList() {
     },
   });
 }
+
+export async function postNotify(params: RootType.NotifyRequest) {
+  return request<BaseResponse<RootType.NotifyResponse>>('/notify', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    params: params,
+  });
+}

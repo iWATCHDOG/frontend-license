@@ -2,7 +2,7 @@ import Title from 'antd/es/typography/Title';
 import { Button, Divider, message } from 'antd';
 import { ProForm, ProFormInstance, ProFormSelect, ProFormText } from '@ant-design/pro-components';
 import React, { useRef } from 'react';
-import { useModel } from '@@/exports';
+import { useModel } from '@umijs/max';
 import { updateUserProfile } from '@/services/userService';
 
 const ProfileComponent: React.FC = () => {
@@ -28,8 +28,10 @@ const ProfileComponent: React.FC = () => {
         message.success('更新成功');
         // 刷新页面
         if (data) {
+          localStorage.setItem('refreshing', 'refreshing');
           setTimeout(() => {
             window.location.reload();
+            localStorage.removeItem('refreshing');
           }, 300);
         }
       }
@@ -46,7 +48,7 @@ const ProfileComponent: React.FC = () => {
     <ProForm<UserType.UpdateUserProfileRequest>
       formRef={formRef}
       submitter={{
-        render: (props, doms) => {
+        render: () => {
           return [
             <Button type="primary" htmlType="button" onClick={doUpdate} key="update">
               更新资料

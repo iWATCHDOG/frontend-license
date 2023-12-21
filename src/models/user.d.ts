@@ -52,4 +52,30 @@ declare namespace UserType {
     username?: string;
     gender?: number;
   }
+
+  interface UpdateUserPasswordRequest {
+    oldPassword: string;
+    newPassword: string;
+  }
+
+  interface SecurityLog {
+    id?: number;
+    uid?: number;
+    title?: string;
+    types?: string;
+    ip?: string;
+    info?: string;
+    createTime?: Date;
+    updateTime?: Date;
+  }
+
+  interface UserSecurityLogQueryRequest extends PageRequest {
+    id?: number;
+    uid?: number;
+    types?: string;
+    ip?: string;
+    info?: string;
+    createTime?: Date;
+    updateTime?: Date;
+  }
 }

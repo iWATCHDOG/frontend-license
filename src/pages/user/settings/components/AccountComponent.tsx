@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
-import { history, useModel } from '@@/exports';
+import { useModel } from '@umijs/max';
+import { history } from '@@/exports';
 import Title from 'antd/es/typography/Title';
 import { Button, Divider, message, Modal, Space, Typography } from 'antd';
 import { deleteUser, getOAuthInfo, unBindOAuth } from '@/services/userService';
@@ -10,13 +11,10 @@ import { BASE_URL } from '@/constants';
 
 const { Text, Link } = Typography;
 
-const functionComponent: React.FC = () => {
+const AccountComponent: React.FC = () => {
   type OAuthDataItem = (typeof defaultOAuthData)[number];
   const [githubInfo, setGithubInfo] = useState<string | undefined>(undefined);
-  const {
-    initialState,
-    setInitialState,
-  } = useModel('@@initialState');
+  const { initialState, setInitialState } = useModel('@@initialState');
   const defaultOAuthData = [
     {
       id: 3,
@@ -25,6 +23,7 @@ const functionComponent: React.FC = () => {
       desc: githubInfo ?? 'Loading...',
     },
   ];
+  // eslint-disable-next-line react-hooks/rules-of-hooks
   const [oAuthDataSource, setOAuthDataSource] = useState<OAuthDataItem[]>(defaultOAuthData);
 
   const isBind = (item: OAuthDataItem) => {
@@ -45,6 +44,7 @@ const functionComponent: React.FC = () => {
         try {
           const { data } = await deleteUser();
           message.success('注销成功');
+          localStorage.setItem('refreshing', 'refreshing');
           await setInitialState({
             ...initialState,
             loginUser: undefined,
@@ -58,6 +58,7 @@ const functionComponent: React.FC = () => {
                   redirect: window.location.href,
                 }),
               });
+              localStorage.removeItem('refreshing');
             }, 300);
           }
         } catch (e: any) {
@@ -73,26 +74,31 @@ const functionComponent: React.FC = () => {
     for (const item of defaultOAuthData) {
       try {
         const ret = await getOAuthInfo(item.id);
-        if (ret.data) {
-          item.desc = ret.data;
-          setGithubInfo(ret.data);
-        } else {
-          item.desc = '未绑定';
-          setGithubInfo('未绑定');
+        if (item.id === 3) {
+          if (ret.data) {
+            item.desc = ret.data;
+            setGithubInfo(ret.data);
+          } else {
+            item.desc = '未绑定';
+            setGithubInfo('未绑定');
+          }
         }
       } catch (e: any) {
         item.desc = '未绑定';
-        setGithubInfo('未绑定');
+        if (item.id === 3) {
+          setGithubInfo('未绑定');
+        }
       }
     }
   };
 
+  // eslint-disable-next-line react-hooks/rules-of-hooks
   useEffect(() => {
     initOAuth();
   }, []);
 
   return (<>
-    <Title level={3}>第三方账号管理</Title>
+    <Title level={3}>第三方账号登录管理</Title>
     <Divider />
     <ProList<OAuthDataItem>
       rowKey="id"
@@ -137,8 +143,10 @@ const functionComponent: React.FC = () => {
                         message.success('解绑成功');
                         // 刷新页面
                         if (data) {
+                          localStorage.setItem('refreshing', 'refreshing');
                           setTimeout(() => {
                             window.location.reload();
+                            localStorage.removeItem('refreshing');
                           }, 300);
                         }
                       } catch (e: any) {
@@ -152,8 +160,14 @@ const functionComponent: React.FC = () => {
                   const hide = message.loading('跳转中');
                   if (row.id === 3) {
                     // GitHub
+                    localStorage.setItem('refreshing', 'refreshing');
+                    localStorage.setItem('redirect', window.location.href);
                     window.location.href = BASE_URL + '/oauth/github';
+                    setTimeout(() => {
+                      localStorage.removeItem('refreshing');
+                    }, 300);
                   }
+                  hide();
                 }
               }
               }
@@ -170,4 +184,4 @@ const functionComponent: React.FC = () => {
     <Button danger onClick={onDeleteClick}>注销您的账户</Button>
   </>);
 };
-export default functionComponent;
+export default AccountComponent;

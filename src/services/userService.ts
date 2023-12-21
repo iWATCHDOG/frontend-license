@@ -155,6 +155,19 @@ export async function updateUserAvatar(avatar: RcFile) {
 }
 
 /**
+ * 更新用户密码
+ */
+export async function updateUserPassword(params: UserType.UpdateUserPasswordRequest) {
+  return request<BaseResponse<boolean>>('/user/update/password', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    params: params,
+  });
+}
+
+/**
  * 注销用户
  */
 export async function deleteUser() {
@@ -193,5 +206,42 @@ export async function bindOAuth(type: number) {
       'Content-Type': 'application/json',
     },
     params: { type },
+  });
+}
+
+export async function getSecurityLogs(params: UserType.UserSecurityLogQueryRequest) {
+  return request<BaseResponse<PageInfo<UserType.SecurityLog[]>>>('/user/security/log', {
+    method: 'GET',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    params: params,
+  });
+}
+
+export async function getUsername(uid: number) {
+  return request<BaseResponse<string>>('/user/get/username/' + uid, {
+    method: 'GET',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+  });
+}
+
+export async function getUserProfile(uid: number) {
+  return request<BaseResponse<UserType.UserVO>>('/user/get/profile/' + uid, {
+    method: 'GET',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+  });
+}
+
+export async function getUserProfileByUsername(username: string) {
+  return request<BaseResponse<UserType.UserVO>>('/user/get/profile/username/' + username, {
+    method: 'GET',
+    headers: {
+      'Content-Type': 'application/json',
+    },
   });
 }

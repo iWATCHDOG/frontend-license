@@ -1,14 +1,18 @@
 import { userLogout } from '@/services/userService';
 import { Link } from '@@/exports';
 import { useModel } from '@umijs/max';
-import { Avatar, Button, Dropdown, MenuProps, message, notification } from 'antd';
+import { Avatar, Button, Dropdown, MenuProps, message, notification, Space, Typography } from 'antd';
 import classNames from 'classnames';
 import { stringify } from 'querystring';
 import React, { useEffect } from 'react';
+// @ts-ignore
 import { history, useNavigate } from 'umi';
 import styles from './index.less';
 import { BASE_URL } from '@/constants';
 import { getNotifyList } from '@/services/rootService';
+import { PoweroffOutlined, SettingOutlined, UserOutlined } from '@ant-design/icons';
+
+const { Text } = Typography;
 
 
 /**
@@ -30,17 +34,21 @@ const AvatarDropdown: React.FC = () => {
     const { key } = event;
 
     if (key === 'logout') {
+      await setInitialState({
+        ...initialState,
+        loginUser: undefined,
+      });
+      localStorage.setItem('refreshing', 'refreshing');
       try {
         await userLogout();
         message.success('已退出登录');
       } catch (e: any) {
         message.error('操作失败');
       }
-      // @ts-ignore
-      await setInitialState({
-        ...initialState,
-        loginUser: undefined,
-      });
+      // 清除cookie
+      let date = new Date();
+      date.setDate(date.getDate());
+      document.cookie = `loginToken="null"; expires=${date.toUTCString()};`;
       setTimeout(() => {
         history.replace({
           pathname: '/user/login',
@@ -48,10 +56,13 @@ const AvatarDropdown: React.FC = () => {
             redirect: window.location.href,
           }),
         });
+        localStorage.removeItem('refreshing');
       }, 300);
       return;
     } else if (key === 'settings') {
       navigate('/user/settings');
+    } else if (key === 'profile') {
+      navigate('/user/' + loginUser?.username + '.' + loginUser?.uid);
     }
   };
 
@@ -60,45 +71,72 @@ const AvatarDropdown: React.FC = () => {
     label: loginUser.username ?? 'null',
     disabled: true,
   }, {
+    key: 'profile',
+    label: <>
+      <UserOutlined /> 个人主页
+    </>,
+  }, {
+    type: 'divider',
+  }, {
     key: 'settings',
-    label: '设置',
+    label: <>
+      <SettingOutlined /> 设置
+    </>,
   }, {
     type: 'divider',
   }, {
     key: 'logout',
     danger: true,
-    label: '退出登录',
+    label: <>
+      <PoweroffOutlined /> 退出登录
+    </>,
   }] : [];
 
   const getNotify = async () => {
-    try {
-      const res = await getNotifyList();
-      res.data.forEach(notify => {
-        let type: string = 'info';
-        switch (notify.type) {
-          case 0:
-            type = 'success';
-            break;
-          case 1:
-            type = 'error';
-            break;
-          case 2:
-            type = 'warning';
-            break;
-          case 3:
-            type = 'info';
-            break;
-        }
-        // @ts-ignore
-        api[type]({
-          message: notify.title,
-          description: notify.content,
-        });
-      });
-    } catch (ignore) {
+      // 判断是否处于刷新状态
+      if (localStorage.getItem('refreshing') !== 'refreshing') {
+        // 处于刷新状态
+        try {
+          const res = await getNotifyList();
+          res.data.forEach(notify => {
+            let type: string = 'info';
+            switch (notify.type) {
+              case 0:
+                type = 'success';
+                break;
+              case 1:
+                type = 'error';
+                break;
+              case 2:
+                type = 'warning';
+                break;
+              case 3:
+                type = 'info';
+                break;
+            }
+            // @ts-ignore
+            api[type]({
+              message: notify.title,
+              description: <>
+                <Text>
+                  {notify.content}
+                </Text>
+                <div style={{ textAlign: 'right' }}>
+                  <Space direction="vertical">
+                    <Typography.Text type="secondary" style={{ fontSize: 'smaller' }}>
+                      {notify.id}
+                    </Typography.Text>
+                  </Space>
+                </div>
+              </>,
+            });
+          });
+        } catch (ignore) {
 
+        }
+      }
     }
-  };
+  ;
 
   const doNotify = async () => {
     await getNotify();
@@ -109,7 +147,13 @@ const AvatarDropdown: React.FC = () => {
   };
 
   useEffect(() => {
-    doNotify();
+    const redirect = localStorage.getItem('redirect');
+    if (redirect) {
+      localStorage.removeItem('redirect');
+      window.location.href = redirect ?? '/';
+    } else {
+      doNotify();
+    }
   }, []);
 
   return <>
