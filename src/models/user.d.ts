@@ -27,6 +27,7 @@ declare namespace UserType {
     avatar?: string;
     status?: number;
     token?: string;
+    group?: Permission.Permission;
     createTime?: Date;
     updateTime?: Date;
   }
@@ -72,6 +73,7 @@ declare namespace UserType {
   interface UserSecurityLogQueryRequest extends PageRequest {
     id?: number;
     uid?: number;
+    title?: string;
     types?: string;
     ip?: string;
     info?: string;

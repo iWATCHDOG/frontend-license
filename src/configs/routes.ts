@@ -8,10 +8,10 @@ export default [{
   component: 'index',
 }, {
   name: '用户协议',
+  hideInMenu: true,
   path: '/agreement',
   component: 'agreement',
 }, {
-  path: '/user',
   hideInMenu: true,
   routes: [{
     name: '用户登录',
@@ -40,9 +40,25 @@ export default [{
     path: '/user/settings/:type',
     component: 'user/settings',
   }, {
+    name: '设置',
+    access: 'canUser',
+    path: '/user',
+    redirect: '/user/settings',
+  }, {
     name: '用户主页',
     path: '/user/:var',
     component: 'user/profile',
+  }],
+}, {
+  name: '管理',
+  access: 'canAdmin',
+  path: '/admin',
+  component: 'admin/overview',
+  routes: [{
+    name: '概览',
+    path: '/admin/:type',
+    component: 'admin/overview',
+    hideInMenu: true,
   }],
 }, {
   name: '404',

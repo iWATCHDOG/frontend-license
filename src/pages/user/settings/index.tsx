@@ -147,12 +147,10 @@ export default () => {
           </Sider>
           <Layout style={{ padding: '24px' }}>
             <Content style={{ margin: '24px 16px 0' }}>
-              <div style={{ minHeight: 360 }}>
-                {selectedKeys[0] === '1' && (<ProfileComponent />)}
-                {selectedKeys[0] === '2' && (<AccountComponent />)}
-                {selectedKeys[0] === '3-1' && (<SecurityComponent />)}
-                {selectedKeys[0] === '4-1' && (<SecurityLogComponent />)}
-              </div>
+              {selectedKeys[0] === '1' ? (<ProfileComponent />) :
+                selectedKeys[0] === '2' ? (<AccountComponent />) :
+                  selectedKeys[0] === '3-1' ? (<SecurityComponent />) :
+                    selectedKeys[0] === '4-1' && (<SecurityLogComponent />)}
             </Content>
             {selectedKeys[0] === '1' && (
               <Sider width={200} style={{ background: '#fff' }}>

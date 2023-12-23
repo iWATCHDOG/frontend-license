@@ -48,5 +48,4 @@ interface RequestInfo {
  */
 interface InitialState {
   loginUser?: UserType.UserVO;
-  group?: Permission.Permission;
 }

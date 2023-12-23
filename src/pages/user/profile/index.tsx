@@ -1,10 +1,12 @@
 import { useParams } from '@@/exports';
-import { useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { getUserProfile, getUserProfileByUsername } from '@/services/userService';
 import { postNotify } from '@/services/rootService';
 // @ts-ignore
-import { history, useNavigate } from 'umi';
+import { history } from 'umi';
 import { stringify } from 'querystring';
+import { Avatar, Col, Row, Space, Typography } from 'antd';
+import { BASE_URL } from '@/constants';
 
 export default () => {
   // 获取路由传参
@@ -69,5 +71,28 @@ export default () => {
     init(uid, username);
   }, []);
   return <>
-    {user.username}</>;
+    <Row>
+      <Col>
+        <Space size={0} direction={'vertical'}>
+          <Space>
+            <Avatar
+              size={320}
+              src={BASE_URL + '/user/get/avatar/' + user?.uid}
+            />
+          </Space>
+          <Space>
+            <br />
+          </Space>
+          <Space>
+            <Typography.Text style={{ fontSize: 'large', color: '#8c9197' }}>
+              {user?.username}
+            </Typography.Text>
+          </Space>
+        </Space>
+      </Col>
+      <Col span={18} push={6}>
+        col-18 col-push-6
+      </Col>
+    </Row>
+  </>;
 };

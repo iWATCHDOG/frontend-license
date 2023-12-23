@@ -1,7 +1,7 @@
 import { RequestConfig } from '@@/plugin-request/request';
 import { RunTimeLayoutConfig } from '@@/plugin-layout/types';
 import { BASE_URL, DEFAULT_NAME } from '@/constants';
-import { getLoginUser, getLoginUserMaxGroup, userLoginByToken } from '@/services/userService';
+import { getLoginUser, userLoginByToken } from '@/services/userService';
 import GlobalFooter from '@/components/GlobalFooter';
 import RightContent from '@/components/GlobalHeader/RightContent';
 
@@ -23,10 +23,7 @@ function getCookie(name: string) {
  * 更多信息见文档：https://next.umijs.org/docs/api/runtime-config#getinitialstate
  */
 export async function getInitialState(): Promise<InitialState> {
-  const defaultState: InitialState = {
-    loginUser: undefined,
-    group: undefined,
-  };
+  const defaultState: InitialState = { loginUser: undefined };
 
   function refreshToken(token?: string) {
     // 刷新cookie
@@ -50,14 +47,12 @@ export async function getInitialState(): Promise<InitialState> {
         defaultState.loginUser = res.data;
         refreshToken(res.data.token);
       } catch (e) {
+        // cookie登录失败，清除cookie
+        let date = new Date();
+        date.setDate(date.getDate());
+        document.cookie = `loginToken="null"; expires=${date.toUTCString()};`;
       }
     }
-  }
-  try {
-    const per = await getLoginUserMaxGroup();
-    defaultState.group = per.data;
-  } catch (ignore) {
-
   }
   return defaultState;
 }

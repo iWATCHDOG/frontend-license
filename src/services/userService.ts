@@ -14,18 +14,6 @@ export async function getLoginUser() {
 }
 
 /**
- * 获取当前登录用户最大权限组
- */
-export async function getLoginUserMaxGroup() {
-  return request<BaseResponse<Permission.Permission>>('/user/get/group/max', {
-    method: 'GET',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-  });
-}
-
-/**
  * 用户注销
  */
 export async function userLogout() {
