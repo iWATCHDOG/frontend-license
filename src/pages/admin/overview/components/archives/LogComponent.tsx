@@ -1,11 +1,10 @@
 import React, { useRef, useState } from 'react';
 import { useModel } from '@@/exports';
-// @ts-ignore
-import humanizeDuration from 'humanize-duration';
 import { ActionType, ProList } from '@ant-design/pro-components';
 import { Button, Space, Tag } from 'antd';
 import { getLogByRequestID, getLogs } from '@/services/adminService';
 import LogDrawer from '@/pages/admin/overview/components/archives/components/LogDrawer';
+import TimeShow from '@/components/TimeShow';
 
 const LogComponent: React.FC = () => {
   const { initialState } = useModel('@@initialState');
@@ -14,35 +13,6 @@ const LogComponent: React.FC = () => {
   const [open, setOpen] = useState(false);
   const [log, setLog] = useState<AdminType.Log | undefined>(undefined);
   const [loading, setLoading] = useState(true);
-
-  const humanizer = humanizeDuration.humanizer({
-    language: 'zh_CN',
-    maxDecimalPoints: 0,
-    delimiter: ' ',
-    largest: 1,
-  });
-
-  const fillZero2 = (s: number) => {
-    if (s < 10) {
-      return `0${s}`;
-    }
-    return s;
-  };
-
-  const translateTimeCreated = (d: Date | undefined) => {
-    if (!d) {
-      return '';
-    }
-    const t = d.getTime();
-    const offset = Date.now() - t;
-    if (offset < 5 * 60 * 1000) {
-      return '刚刚';
-    }
-    if (offset > 7 * 24 * 60 * 60 * 1000) {
-      return `${d.getFullYear()}-${fillZero2(d.getMonth() + 1)}-${fillZero2(d.getDate())} ${fillZero2(d.getHours())}:${fillZero2(d.getMinutes())}`;
-    }
-    return humanizer(offset) + '前';
-  };
 
   const getHttpTag = (code: number) => {
     // 如果是200系列，就是绿色，否则就是红色
@@ -141,7 +111,7 @@ const LogComponent: React.FC = () => {
                   </>)}
                   <span>{row?.ip}</span>
                   <span>|</span>
-                  <span>{translateTimeCreated(new Date(row?.updateTime as any as number))}</span>
+                  <span><TimeShow date={new Date(row?.updateTime as any as number)} /></span>
                   <span>|</span>
                   <span>{row?.id}</span>
                 </Space>
