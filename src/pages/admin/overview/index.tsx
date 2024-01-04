@@ -49,7 +49,7 @@ export default () => {
     }, {
       type: 'log',
       key: '5-2',
-      label: '访问日志',
+      label: '请求日志',
       icon: <ContainerOutlined />,
     }],
 

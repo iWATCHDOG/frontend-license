@@ -13,8 +13,6 @@ export default defineConfig({
     theme: {},
     // antd <App /> valid for version 5.1.0 or higher, default: undefined
     appConfig: {},
-    // Transform DayJS to MomentJS
-    momentPicker: true,
     // Add StyleProvider for legacy browsers
     styleProvider: {
       hashPriority: 'high',

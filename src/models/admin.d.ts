@@ -32,4 +32,19 @@ declare namespace AdminType {
     createTime?: Date;
     updateTime?: Date;
   }
+
+
+  interface UserQueryRequest extends PageRequest {
+    uid?: number;
+    username?: string;
+    email?: string;
+    phone?: string;
+    gender?: number;
+    avatar?: string;
+    status?: number;
+    token?: string;
+    group?: Permission.Permission;
+    createTime?: Date;
+    updateTime?: Date;
+  }
 }

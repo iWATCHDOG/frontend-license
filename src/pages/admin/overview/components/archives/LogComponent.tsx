@@ -43,8 +43,7 @@ const LogComponent: React.FC = () => {
       actionRef={actionRef}
       rowKey="id"
       pagination={{
-        pageSize: 10,
-        showSizeChanger: false,
+        showSizeChanger: true,
       }}
       toolBarRender={() => [
         <Button

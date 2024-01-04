@@ -9,7 +9,8 @@ enum SecurityType {
   UPDATE_PROFILE = 300,
   CHANGE_AVATAR = 301,
   ADD_ACCOUNT = 400,
-  DELETE_USER = 401
+  DELETE_USER = 401,
+  ADMIN_OPERATION = 500
 }
 
 const getSecurityTypeColor = (type: SecurityType) => {
@@ -22,6 +23,7 @@ const getSecurityTypeColor = (type: SecurityType) => {
     [SecurityType.CHANGE_AVATAR]: 'cyan',
     [SecurityType.ADD_ACCOUNT]: 'magenta',
     [SecurityType.DELETE_USER]: 'geekblue',
+    [SecurityType.ADMIN_OPERATION]: 'volcano',
   };
   return colors[type];
 };
@@ -36,6 +38,7 @@ const getSecurityTypeDescription = (type: SecurityType) => {
     [SecurityType.CHANGE_AVATAR]: '修改头像',
     [SecurityType.ADD_ACCOUNT]: '注册',
     [SecurityType.DELETE_USER]: '注销账号',
+    [SecurityType.ADMIN_OPERATION]: '管理员操作',
   };
   return descriptions[type];
 };
@@ -48,7 +51,7 @@ const getSecurityTypeByCode = (code: number) => {
 };
 
 interface Props {
-  data?: number;
+  data: number;
 }
 
 const SecurityLogTag: React.FC<Props> = (props) => {

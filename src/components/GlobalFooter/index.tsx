@@ -31,7 +31,7 @@ const GlobalFooter: React.FC = () => {
     await initPing();
     setInterval(async () => {
       await initPing();
-    }, 3000);
+    }, 5000);
   };
 
   const formatPing = (ping: number) => {

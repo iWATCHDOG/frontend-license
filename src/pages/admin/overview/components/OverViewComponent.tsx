@@ -34,12 +34,15 @@ const OverViewComponent: React.FC = () => {
       try {
         setRefreshingCount(true);
         const uc = await countUser();
+        const sc = await countSecurityLog();
         setUserCount(uc.data);
+        setSecurityCount(sc.data);
         const rc = await countLog();
         setLogCount(rc.data);
-        const sc = await countSecurityLog();
-        setSecurityCount(sc.data);
       } catch (ignore) {
+        setUserCount(-9999);
+        setLogCount(-9999);
+        setSecurityCount(-9999);
       } finally {
         setRefreshingCount(false);
       }
