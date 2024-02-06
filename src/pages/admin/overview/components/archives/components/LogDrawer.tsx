@@ -1,5 +1,4 @@
 import React, { PropsWithChildren } from 'react';
-import { useModel } from '@@/exports';
 import { Drawer, Skeleton } from 'antd';
 import { ProDescriptions } from '@ant-design/pro-components';
 // @ts-ignore
@@ -19,9 +18,6 @@ const LogDrawer: React.FC<PropsWithChildren<Props>> = (props) => {
     onCancel,
     loading,
   } = props;
-  const { initialState } = useModel('@@initialState');
-  const loginUser = initialState?.loginUser;
-
   const humanizer = humanizeDuration.humanizer({
     language: 'zh_CN',
     maxDecimalPoints: 0,

@@ -47,4 +47,19 @@ declare namespace AdminType {
     createTime?: Date;
     updateTime?: Date;
   }
+
+  interface PermissionQueryRequest extends PageRequest {
+    id?: number;
+    uid?: number;
+    permission?: string;
+    expiry?: number;
+    createTime?: Date;
+    updateTime?: Date;
+  }
+
+  interface PermissionAddRequest {
+    uid: number;
+    permission: string;
+    expiry: number;
+  }
 }

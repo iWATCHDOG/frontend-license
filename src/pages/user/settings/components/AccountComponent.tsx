@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useModel } from '@umijs/max';
-import { history } from '@@/exports';
+import { Helmet, history } from '@@/exports';
 import Title from 'antd/es/typography/Title';
 import { Button, Divider, message, Modal, Space, Typography } from 'antd';
 import { deleteUser, getOAuthInfo, unBindOAuth } from '@/services/userService';
@@ -98,6 +98,9 @@ const AccountComponent: React.FC = () => {
   }, []);
 
   return (<>
+    <Helmet>
+      <title>账户 - 设置</title>
+    </Helmet>
     <Title level={3}>第三方账号登录管理</Title>
     <Divider />
     <ProList<OAuthDataItem>

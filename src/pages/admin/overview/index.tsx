@@ -1,7 +1,15 @@
 import { useModel, useParams } from '@@/exports';
 import React, { useEffect, useState } from 'react';
-import { ContainerOutlined, ExceptionOutlined, FormOutlined, HomeOutlined, UserOutlined } from '@ant-design/icons';
-import { Layout, Menu, MenuProps } from 'antd';
+import {
+  ContainerOutlined,
+  ExceptionOutlined,
+  FormOutlined,
+  HomeOutlined,
+  PlusSquareOutlined,
+  SecurityScanOutlined,
+  UserOutlined,
+} from '@ant-design/icons';
+import { Layout, Menu, MenuProps, Result } from 'antd';
 import Sider from 'antd/es/layout/Sider';
 import { ProCard } from '@ant-design/pro-components';
 import { Content } from 'antd/es/layout/layout';
@@ -10,6 +18,8 @@ import UserComponent from '@/pages/admin/overview/components/UserComponent';
 import AgreementComponent from '@/pages/admin/overview/components/settings/AgreementComponent';
 import SecurityLogComponent from '@/pages/admin/overview/components/archives/SecurityLogComponent';
 import LogComponent from '@/pages/admin/overview/components/archives/LogComponent';
+import PermissionComponent from '@/pages/admin/overview/components/permission/PermissionCompoent';
+import PermissionAddComponent from '@/pages/admin/overview/components/permission/PermissionAddComponent';
 
 export default () => {
   const { initialState, setInitialState } = useModel('@@initialState');
@@ -27,6 +37,21 @@ export default () => {
     key: '2',
     label: '用户管理',
     icon: <UserOutlined />,
+  }, {
+    type: 'group',
+    key: '3',
+    label: '权限管理',
+    children: [{
+      type: 'permission/overview',
+      key: '3-1',
+      label: '权限列表',
+      icon: <SecurityScanOutlined />,
+    }, {
+      type: 'permission/add',
+      key: '3-2',
+      label: '添加权限',
+      icon: <PlusSquareOutlined />,
+    }],
   }, {
     type: 'group',
     key: '4',
@@ -67,6 +92,7 @@ export default () => {
           for (const child of item.children) {
             if (child.key === key) {
               type = child.type;
+              break;
             }
           }
         }
@@ -77,19 +103,30 @@ export default () => {
   };
 
   useEffect(() => {
-    const type = params.type;
+    let type = params.type;
+    const type2 = params.type2;
     if (type === 'overview') {
       setSelectedKeys(['1']);
     } else if (type === 'user') {
       setSelectedKeys(['2']);
     } else if (type === 'permission') {
-      setSelectedKeys(['3']);
+      if (type2 === 'overview') {
+        setSelectedKeys(['3-1']);
+      } else if (type2 === 'add') {
+        setSelectedKeys(['3-2']);
+      } else {
+        setSelectedKeys(['3-1']);
+      }
     } else if (type === 'agreement') {
       setSelectedKeys(['4-1']);
     } else if (type === 'security-log') {
       setSelectedKeys(['5-1']);
     } else if (type === 'log') {
       setSelectedKeys(['5-2']);
+    } else {
+      setSelectedKeys(['1']);
+      // 修改为默认路由
+      window.history.pushState({}, '', '/admin/overview');
     }
   }, []);
 
@@ -110,9 +147,12 @@ export default () => {
             <Content style={{ margin: '24px 16px 0' }}>
               {selectedKeys[0] === '1' ? (<OverViewComponent />) :
                 selectedKeys[0] === '2' ? (<UserComponent />) :
-                  selectedKeys[0] === '4-1' ? (<AgreementComponent />) :
-                    selectedKeys[0] === '5-1' ? (<SecurityLogComponent />) :
-                      selectedKeys[0] === '5-2' && (<LogComponent />)}
+                  selectedKeys[0] === '3-1' ? (<PermissionComponent />) :
+                    selectedKeys[0] === '3-2' ? (<PermissionAddComponent />) :
+                      selectedKeys[0] === '4-1' ? (<AgreementComponent />) :
+                        selectedKeys[0] === '5-1' ? (<SecurityLogComponent />) :
+                          selectedKeys[0] === '5-2' ? (<LogComponent />) :
+                            <Result status="404" title="404" subTitle="抱歉，您访问的页面不存在。" />}
             </Content>
           </Layout>
         </Layout>

@@ -4,6 +4,7 @@ import { ProForm, ProFormInstance, ProFormSelect, ProFormText } from '@ant-desig
 import React, { useRef } from 'react';
 import { useModel } from '@umijs/max';
 import { updateUserProfile } from '@/services/userService';
+import { Helmet } from '@@/exports';
 
 const ProfileComponent: React.FC = () => {
   const { initialState } = useModel('@@initialState');
@@ -43,6 +44,9 @@ const ProfileComponent: React.FC = () => {
   };
 
   return (<>
+    <Helmet>
+      <title>公开资料 - 设置</title>
+    </Helmet>
     <Title level={3}>公开资料</Title>
     <Divider />
     <ProForm<UserType.UpdateUserProfileRequest>

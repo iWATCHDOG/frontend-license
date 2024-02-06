@@ -1,14 +1,18 @@
-import React, { useRef } from 'react';
+import React, { useRef, useState } from 'react';
 import { Helmet, useModel } from '@@/exports';
 import { ActionType, ProColumns, ProTable } from '@ant-design/pro-components';
-import { Avatar, Badge, Button, Divider, message, Popconfirm, Space, Typography } from 'antd';
-import { deleteUser, getUsers } from '@/services/adminService';
+import { Avatar, Badge, Button, Divider, Space } from 'antd';
 import { BASE_URL } from '@/constants';
+import { getUsers } from '@/services/adminService';
+import { ManOutlined, QuestionCircleOutlined, WomanOutlined } from '@ant-design/icons';
+import AddModalComponent from '@/pages/admin/overview/components/permission/components/AddModal';
 
-const UserComponent: React.FC = () => {
+const PermissionAddComponent: React.FC = () => {
   const { initialState } = useModel('@@initialState');
   const loginUser = initialState?.loginUser;
   const actionRef = useRef<ActionType>();
+  const [user, setUser] = useState<UserType.UserVO | undefined>(undefined);
+  const [addModalVisible, setAddModalVisible] = useState<boolean>(false);
 
   const columns: ProColumns<UserType.UserVO>[] = [{
     title: 'UID',
@@ -37,9 +41,9 @@ const UserComponent: React.FC = () => {
     title: '性别',
     dataIndex: 'gender',
     valueEnum: {
-      1: { text: '男' },
-      2: { text: '女' },
-      3: { text: '保密' },
+      1: { text: <><ManOutlined /> 男</> },
+      2: { text: <><WomanOutlined /> 女</> },
+      3: { text: <><QuestionCircleOutlined /> 保密</> },
     },
   }, {
     title: '状态',
@@ -50,58 +54,25 @@ const UserComponent: React.FC = () => {
       2: { text: <Badge status="error" text={'删除'} /> },
     },
   }, {
-    title: '创建时间',
-    dataIndex: 'createTime',
-    valueType: 'dateTime',
-    hideInForm: true,
-    search: false,
-  }, {
-    title: '更新时间',
-    dataIndex: 'updateTime',
-    valueType: 'dateTime',
-    hideInForm: true,
-    search: false,
-  }, {
     title: '操作',
     dataIndex: 'option',
     valueType: 'option',
     render: (_, record) => (
       <Space split={<Divider type="vertical" />}>
-        <Typography.Link
-          onClick={() => {
-          }}
-        >
-          编辑
-        </Typography.Link>
-        <Popconfirm
-          title="您确定要删除么？"
-          onConfirm={async () => {
-            const hide = message.loading('更新中');
-            const uid = record.uid;
-            try {
-              await deleteUser(uid as number);
-              message.success('删除成功');
-              actionRef.current?.reload();
-            } catch (e: any) {
-              message.error(e.message);
-            } finally {
-              hide();
-            }
-          }}
-          okText="确认"
-          cancelText="取消"
-        >
-          <Typography.Link type="danger">删除</Typography.Link>
-        </Popconfirm>
+        <Button onClick={async () => {
+          // 打开添加权限的页面
+          setUser(record);
+          setAddModalVisible(true);
+        }}>选择</Button>
       </Space>
     ),
   }];
   return (<>
     <Helmet>
-      <title>用户管理 - 管理后台</title>
+      <title>添加权限 - 权限管理</title>
     </Helmet>
     <ProTable<UserType.UserVO>
-      headerTitle="用户管理"
+      headerTitle="添加权限"
       actionRef={actionRef}
       rowKey="id"
       pagination={{
@@ -111,14 +82,6 @@ const UserComponent: React.FC = () => {
       search={{
         labelWidth: 'auto',
       }}
-      toolBarRender={() => [
-        <Button
-          key="1"
-          type="primary"
-        >
-          新建
-        </Button>,
-      ]}
       request={async (params, sorter, filter) => {
         const searchParams: AdminType.UserQueryRequest = {
           ...params,
@@ -142,6 +105,11 @@ const UserComponent: React.FC = () => {
       }}
       columns={columns}
     />
+    <AddModalComponent
+      user={user}
+      modalVisible={addModalVisible}
+      onCancel={() => setAddModalVisible(false)}
+      onFinish={() => setAddModalVisible(false)} />
   </>);
 };
-export default UserComponent;
+export default PermissionAddComponent;

@@ -55,11 +55,21 @@ export default [{
   path: '/admin',
   component: 'admin/overview',
   routes: [{
-    name: '概览',
+    name: '管理',
     path: '/admin/:type',
     component: 'admin/overview',
     hideInMenu: true,
+  }, {
+    name: '管理',
+    path: '/admin/:type/:type2',
+    component: 'admin/overview',
+    hideInMenu: true,
   }],
+}, {
+  name: '401',
+  path: '/401',
+  component: '@/pages/401.tsx',
+  hideInMenu: true,
 }, {
   name: '404',
   path: '/*',

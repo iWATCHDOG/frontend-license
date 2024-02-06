@@ -3,9 +3,10 @@ import { Avatar, Button, Space } from 'antd';
 import { ActionType, ProList } from '@ant-design/pro-components';
 import { getSecurityLogs } from '@/services/userService';
 import { BASE_URL } from '@/constants';
-import { useModel } from '@@/exports';
+import { Helmet, useModel } from '@@/exports';
 import SecurityLogTag from '@/components/SecurityLogTag';
 import TimeShow from '@/components/TimeShow';
+import { formatString } from '@/utils/stringUtils';
 
 const SecurityLogComponent: React.FC = () => {
   const { initialState } = useModel('@@initialState');
@@ -26,6 +27,9 @@ const SecurityLogComponent: React.FC = () => {
   };
 
   return (<>
+    <Helmet>
+      <title>安全日志 - 档案</title>
+    </Helmet>
     <ProList<UserType.SecurityLog>
       actionRef={actionRef}
       rowKey="id"
@@ -101,7 +105,7 @@ const SecurityLogComponent: React.FC = () => {
             return (
               <Space size={0} direction={'vertical'}>
                 {row.info && <Space>
-                  <span>{row.info}</span>
+                  <span>{formatString(row.info)}</span>
                 </Space>}
                 <Space>
                   <span>{row?.ip}</span>

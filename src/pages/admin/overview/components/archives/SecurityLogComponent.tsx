@@ -5,6 +5,8 @@ import { getSecurityLogs } from '@/services/userService';
 import { BASE_URL } from '@/constants';
 import SecurityLogTag from '@/components/SecurityLogTag';
 import TimeShow from '@/components/TimeShow';
+import { Helmet } from '@@/exports';
+import { formatString } from '@/utils/stringUtils';
 
 const SecurityLogComponent: React.FC = () => {
   const actionRef = useRef<ActionType>();
@@ -23,6 +25,9 @@ const SecurityLogComponent: React.FC = () => {
   };
 
   return (<>
+    <Helmet>
+      <title>安全日志 - 管理后台</title>
+    </Helmet>
     <ProList<UserType.SecurityLog>
       actionRef={actionRef}
       rowKey="id"
@@ -97,7 +102,7 @@ const SecurityLogComponent: React.FC = () => {
             return (
               <Space size={0} direction={'vertical'}>
                 {row.info && <Space>
-                  <span>{row.info}</span>
+                  <span>{formatString(row.info)}</span>
                 </Space>}
                 <Space>
                   <span>{row?.uid}</span>

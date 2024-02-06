@@ -1,7 +1,7 @@
 import React, { useRef } from 'react';
 import Title from 'antd/es/typography/Title';
 import { Button, Divider, message } from 'antd';
-import { history, useModel } from '@@/exports';
+import { Helmet, history, useModel } from '@@/exports';
 import { ProForm, ProFormInstance, ProFormText } from '@ant-design/pro-components';
 import { updateUserPassword } from '@/services/userService';
 import { stringify } from 'querystring';
@@ -51,6 +51,9 @@ const SecurityComponent: React.FC = () => {
   };
 
   return (<>
+    <Helmet>
+      <title>密码与认证 - 访问</title>
+    </Helmet>
     <Title level={3}>修改密码</Title>
     <Divider />
     <ProForm<UserType.UpdateUserPasswordRequest>

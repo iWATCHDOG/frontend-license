@@ -13,4 +13,14 @@ declare namespace Permission {
     createTime?: Date;
     updateTime?: Date;
   }
+
+  interface PermissionVO {
+    id?: number;
+    uid?: number;
+    username?: string;
+    permission?: string;
+    expiry?: number;
+    createTime?: Date;
+    updateTime?: Date;
+  }
 }

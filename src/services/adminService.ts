@@ -45,6 +45,16 @@ export async function getUsers(params: AdminType.UserQueryRequest) {
     },
     params: params,
   });
+}
+
+export async function getPermissions(params: AdminType.PermissionQueryRequest) {
+  return request<BaseResponse<Permission.PermissionVO[]>>('/admin/permission/list', {
+    method: 'GET',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    params: params,
+  });
 
 }
 
@@ -59,6 +69,25 @@ export async function getLogByRequestID(requestId: string) {
 
 export async function deleteUser(uid: number) {
   return request<BaseResponse<any>>(`/admin/user/` + uid, {
+    method: 'DELETE',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+  });
+}
+
+export async function addPermission(params: AdminType.PermissionAddRequest) {
+  return request<BaseResponse<any>>(`/admin/permission/`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    params: params,
+  });
+}
+
+export async function deletePermission(id: number) {
+  return request<BaseResponse<any>>(`/admin/permission/` + id, {
     method: 'DELETE',
     headers: {
       'Content-Type': 'application/json',

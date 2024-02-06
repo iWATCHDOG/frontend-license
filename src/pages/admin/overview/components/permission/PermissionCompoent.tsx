@@ -1,16 +1,21 @@
 import React, { useRef } from 'react';
 import { Helmet, useModel } from '@@/exports';
+import { Avatar, Divider, message, Popconfirm, Space, Typography } from 'antd';
 import { ActionType, ProColumns, ProTable } from '@ant-design/pro-components';
-import { Avatar, Badge, Button, Divider, message, Popconfirm, Space, Typography } from 'antd';
-import { deleteUser, getUsers } from '@/services/adminService';
+import { deletePermission, getPermissions } from '@/services/adminService';
 import { BASE_URL } from '@/constants';
 
-const UserComponent: React.FC = () => {
+const PermissionComponent: React.FC = () => {
   const { initialState } = useModel('@@initialState');
   const loginUser = initialState?.loginUser;
   const actionRef = useRef<ActionType>();
 
-  const columns: ProColumns<UserType.UserVO>[] = [{
+  const columns: ProColumns<Permission.PermissionVO>[] = [{
+    title: 'ID',
+    dataIndex: 'id',
+    hideInForm: true,
+    search: false,
+  }, {
     title: 'UID',
     dataIndex: 'uid',
   }, {
@@ -27,27 +32,28 @@ const UserComponent: React.FC = () => {
   }, {
     title: '用户名',
     dataIndex: 'username',
+    hideInForm: true,
+    search: false,
   }, {
-    title: '邮箱',
-    dataIndex: 'email',
+    title: '权限',
+    dataIndex: 'permission',
   }, {
-    title: '手机号',
-    dataIndex: 'phone',
-  }, {
-    title: '性别',
-    dataIndex: 'gender',
-    valueEnum: {
-      1: { text: '男' },
-      2: { text: '女' },
-      3: { text: '保密' },
-    },
-  }, {
-    title: '状态',
-    dataIndex: 'status',
-    valueEnum: {
-      0: { text: <Badge status="success" text={'正常'} /> },
-      1: { text: <Badge status="warning" text={'禁用'} /> },
-      2: { text: <Badge status="error" text={'删除'} /> },
+    title: '到期时间',
+    dataIndex: 'expiry',
+    hideInForm: true,
+    search: false,
+    render: (dom, record) => {
+      if (record?.expiry === 0) {
+        return (
+          <Typography.Text>永久</Typography.Text>);
+      } else {
+        // @ts-ignore
+        const exp = new Date(record.expiry);
+        // 格式化时间为 2021-01-01 00:00:00 格式,前面的0显示
+        const t = exp.getFullYear() + '-' + (exp.getMonth() + 1).toString().padStart(2, '0') + '-' + exp.getDate().toString().padStart(2, '0') + ' ' + exp.getHours().toString().padStart(2, '0') + ':' + exp.getMinutes().toString().padStart(2, '0') + ':' + exp.getSeconds().toString().padStart(2, '0');
+        return (
+          <Typography.Text>{t}</Typography.Text>);
+      }
     },
   }, {
     title: '创建时间',
@@ -77,9 +83,8 @@ const UserComponent: React.FC = () => {
           title="您确定要删除么？"
           onConfirm={async () => {
             const hide = message.loading('更新中');
-            const uid = record.uid;
             try {
-              await deleteUser(uid as number);
+              await deletePermission(record.id as number);
               message.success('删除成功');
               actionRef.current?.reload();
             } catch (e: any) {
@@ -98,10 +103,10 @@ const UserComponent: React.FC = () => {
   }];
   return (<>
     <Helmet>
-      <title>用户管理 - 管理后台</title>
+      <title>权限列表 - 权限管理</title>
     </Helmet>
-    <ProTable<UserType.UserVO>
-      headerTitle="用户管理"
+    <ProTable<Permission.PermissionVO>
+      headerTitle="权限管理"
       actionRef={actionRef}
       rowKey="id"
       pagination={{
@@ -111,16 +116,8 @@ const UserComponent: React.FC = () => {
       search={{
         labelWidth: 'auto',
       }}
-      toolBarRender={() => [
-        <Button
-          key="1"
-          type="primary"
-        >
-          新建
-        </Button>,
-      ]}
       request={async (params, sorter, filter) => {
-        const searchParams: AdminType.UserQueryRequest = {
+        const searchParams: AdminType.PermissionQueryRequest = {
           ...params,
           // @ts-ignore
           sorter,
@@ -129,7 +126,7 @@ const UserComponent: React.FC = () => {
         const {
           data,
           code,
-        } = await getUsers(searchParams);
+        } = await getPermissions(searchParams);
         // @ts-ignore
         const d = data?.records || [];
         // @ts-ignore
@@ -144,4 +141,4 @@ const UserComponent: React.FC = () => {
     />
   </>);
 };
-export default UserComponent;
+export default PermissionComponent;

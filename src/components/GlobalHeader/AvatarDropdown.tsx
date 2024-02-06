@@ -1,5 +1,4 @@
 import { userLogout } from '@/services/userService';
-import { Link } from '@@/exports';
 import { useModel } from '@umijs/max';
 import { Avatar, Button, Dropdown, MenuProps, message, notification, Space, Typography } from 'antd';
 import classNames from 'classnames';
@@ -27,6 +26,19 @@ const AvatarDropdown: React.FC = () => {
   const navigate = useNavigate();
 
   const [api, contextHolder] = notification.useNotification();
+
+  const toLogin = async () => {
+    localStorage.setItem('refreshing', 'refreshing');
+    setTimeout(() => {
+      history.replace({
+        pathname: '/user/login',
+        search: stringify({
+          redirect: window.location.href,
+        }),
+      });
+      localStorage.removeItem('refreshing');
+    }, 300);
+  };
 
   const onMenuClick = async (event: {
     key: React.Key; keyPath: React.Key[];
@@ -164,11 +176,9 @@ const AvatarDropdown: React.FC = () => {
           src={BASE_URL + '/user/get/avatar/' + loginUser.uid} />
       </div>
     </Dropdown>) : (<>
-      <Link to="/user/login">
-        <Button type="primary" ghost style={{ marginRight: 16 }}>
-          登录
-        </Button>
-      </Link>
+      <Button type="primary" onClick={toLogin} ghost style={{ marginRight: 16 }}>
+        登录
+      </Button>
     </>)}
   </>;
 };

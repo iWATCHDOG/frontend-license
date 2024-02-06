@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { useModel } from '@@/exports';
+import { Helmet, useModel } from '@@/exports';
 import Title from 'antd/es/typography/Title';
 import CountUp from 'react-countup';
 import { Button, Card, Col, Divider, Row, Statistic } from 'antd';
@@ -62,6 +62,9 @@ const OverViewComponent: React.FC = () => {
     doInit();
   }, []);
   return (<>
+    <Helmet>
+      <title>概览 - 管理后台</title>
+    </Helmet>
     <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
       <div style={{ textAlign: 'left' }}>
         <Title level={3}>API统计</Title>

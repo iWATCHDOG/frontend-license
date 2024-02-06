@@ -1,5 +1,5 @@
 import React, { useRef, useState } from 'react';
-import { useModel } from '@@/exports';
+import { Helmet, useModel } from '@@/exports';
 import { ActionType, ProList } from '@ant-design/pro-components';
 import { Button, Space, Tag } from 'antd';
 import { getLogByRequestID, getLogs } from '@/services/adminService';
@@ -39,6 +39,9 @@ const LogComponent: React.FC = () => {
   };
 
   return (<>
+    <Helmet>
+      <title>请求日志 - 管理后台</title>
+    </Helmet>
     <ProList<AdminType.Log>
       actionRef={actionRef}
       rowKey="id"

@@ -10,7 +10,9 @@ enum SecurityType {
   CHANGE_AVATAR = 301,
   ADD_ACCOUNT = 400,
   DELETE_USER = 401,
-  ADMIN_OPERATION = 500
+  ADMIN_OPERATION = 500,
+  ADD_PERMISSION = 501,
+  REMOVE_PERMISSION = 502,
 }
 
 const getSecurityTypeColor = (type: SecurityType) => {
@@ -24,6 +26,8 @@ const getSecurityTypeColor = (type: SecurityType) => {
     [SecurityType.ADD_ACCOUNT]: 'magenta',
     [SecurityType.DELETE_USER]: 'geekblue',
     [SecurityType.ADMIN_OPERATION]: 'volcano',
+    [SecurityType.ADD_PERMISSION]: 'gold',
+    [SecurityType.REMOVE_PERMISSION]: 'lime',
   };
   return colors[type];
 };
@@ -39,6 +43,8 @@ const getSecurityTypeDescription = (type: SecurityType) => {
     [SecurityType.ADD_ACCOUNT]: '注册',
     [SecurityType.DELETE_USER]: '注销账号',
     [SecurityType.ADMIN_OPERATION]: '管理员操作',
+    [SecurityType.ADD_PERMISSION]: '添加权限',
+    [SecurityType.REMOVE_PERMISSION]: '移除权限',
   };
   return descriptions[type];
 };
