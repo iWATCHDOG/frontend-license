@@ -18,6 +18,15 @@ export async function countLog() {
   });
 }
 
+export async function countBlacklist() {
+  return request<BaseResponse<number>>('/admin/count/blacklist', {
+    method: 'GET',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+  });
+}
+
 export async function countSecurityLog() {
   return request<BaseResponse<number>>('/admin/count/security', {
     method: 'GET',
@@ -89,6 +98,25 @@ export async function addPermission(params: AdminType.PermissionAddRequest) {
 export async function deletePermission(id: number) {
   return request<BaseResponse<any>>(`/admin/permission/` + id, {
     method: 'DELETE',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+  });
+}
+
+export async function updatePermission(params: AdminType.PermissionUpdateRequest) {
+  return request<BaseResponse<any>>(`/admin/permission/`, {
+    method: 'PUT',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    params: params,
+  });
+}
+
+export async function addBlacklist(id: number) {
+  return request<BaseResponse<any>>(`/admin/blacklist/` + id, {
+    method: 'POST',
     headers: {
       'Content-Type': 'application/json',
     },

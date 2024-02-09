@@ -2,27 +2,44 @@
 import humanizeDuration from 'humanize-duration';
 
 // 格式化带有格式的字符串
-export const formatString = (str: string) => {
-  // 修改字符串中的{data:xxx}格式,方法是提取出xxx，若xxx等于0，则返回永久，若xxx不等于0，则返回translateTimeCreated(new Date(xxx))
-  const dataReg = /{date:(\d+)}/g;
-  let ret = str.replace(dataReg, (word, key) => {
-    if (key === '0') {
-      return '永久';
-    }
-    // eslint-disable-next-line @typescript-eslint/no-use-before-define
-    return translateTimeCreated(new Date(parseInt(key)));
-  });
-  // 修改字符串中的{permission:xxx}格式,注意xxx可能包含.,方法是提取出xxx，若xxx以group.开头，则提取group.后的字符串，然后调用getGroupName方法，否则返回xxx
-  const permissionReg = /{permission:([\w.*]+)}/g;
-  ret = ret.replace(permissionReg, (word, key) => {
-    if (key.startsWith('group.')) {
+export const formatString = (str: string): string => {
+  // 这个函数尝试通过编程方式而不是仅仅使用正则表达式来处理字符串格式
+  function replaceDate(str: string): string {
+    return str.replace(/{date:(\d+)}/g, (match, key) => {
       // eslint-disable-next-line @typescript-eslint/no-use-before-define
-      return getGroupByName(key);
+      return key === '0' ? '永久' : translateTimeCreated(new Date(parseInt(key, 10)));
+    });
+  }
+
+  function replacePermission(str: string): string {
+    return str.replace(/{permission:([\w.*]+)}/g, (match, key) => {
+      // eslint-disable-next-line @typescript-eslint/no-use-before-define
+      return key.startsWith('group.') ? getGroupByName(key.substring(6)) : key;
+    });
+  }
+
+  function recursiveReplace(str: string): string {
+    // 先替换日期和权限
+    let result = replaceDate(str);
+    result = replacePermission(result);
+
+    // 检查是否还有需要替换的部分，特别是嵌套部分
+    let oldNewMatch = /{old:(.*?),new:(.*?)}/.exec(result);
+    while (oldNewMatch) {
+      const oldPart = recursiveReplace(oldNewMatch[1]);
+      const newPart = recursiveReplace(oldNewMatch[2]);
+      result = result.replace(oldNewMatch[0], `${oldPart}=>${newPart}`);
+      oldNewMatch = /{old:(.*?),new:(.*?)}/.exec(result);
     }
-    return key;
-  });
-  return ret;
+
+    return result;
+  }
+
+  return recursiveReplace(str);
 };
+
+// 这里假设translateTimeCreated和getGroupByName函数已经正确实现
+
 
 const humanizer = humanizeDuration.humanizer({
   language: 'zh_CN',

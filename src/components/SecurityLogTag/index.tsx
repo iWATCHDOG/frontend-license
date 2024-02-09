@@ -2,6 +2,7 @@ import { Tag } from 'antd';
 import React from 'react';
 
 enum SecurityType {
+  UNKNOWN = -1,
   CHANGE_PASSWORD_FORGET = 100,
   CHANGE_PASSWORD = 101,
   BIND_GITHUB = 200,
@@ -11,12 +12,14 @@ enum SecurityType {
   ADD_ACCOUNT = 400,
   DELETE_USER = 401,
   ADMIN_OPERATION = 500,
-  ADD_PERMISSION = 501,
-  REMOVE_PERMISSION = 502,
+  ADD_PERMISSION = 600,
+  REMOVE_PERMISSION = 601,
+  UPDATE_PERMISSION = 602
 }
 
 const getSecurityTypeColor = (type: SecurityType) => {
   const colors: Record<SecurityType, string> = {
+    [SecurityType.UNKNOWN]: 'gray',
     [SecurityType.CHANGE_PASSWORD_FORGET]: 'red',
     [SecurityType.CHANGE_PASSWORD]: 'blue',
     [SecurityType.BIND_GITHUB]: 'green',
@@ -28,12 +31,14 @@ const getSecurityTypeColor = (type: SecurityType) => {
     [SecurityType.ADMIN_OPERATION]: 'volcano',
     [SecurityType.ADD_PERMISSION]: 'gold',
     [SecurityType.REMOVE_PERMISSION]: 'lime',
+    [SecurityType.UPDATE_PERMISSION]: 'yellow',
   };
-  return colors[type];
+  return colors[type] ?? 'red';
 };
 
 const getSecurityTypeDescription = (type: SecurityType) => {
   const descriptions: Record<SecurityType, string> = {
+    [SecurityType.UNKNOWN]: '未知',
     [SecurityType.CHANGE_PASSWORD_FORGET]: '找回密码',
     [SecurityType.CHANGE_PASSWORD]: '修改密码',
     [SecurityType.BIND_GITHUB]: '绑定GitHub',
@@ -45,6 +50,7 @@ const getSecurityTypeDescription = (type: SecurityType) => {
     [SecurityType.ADMIN_OPERATION]: '管理员操作',
     [SecurityType.ADD_PERMISSION]: '添加权限',
     [SecurityType.REMOVE_PERMISSION]: '移除权限',
+    [SecurityType.UPDATE_PERMISSION]: '更新权限',
   };
   return descriptions[type];
 };
@@ -53,7 +59,7 @@ const getSecurityTypeByCode = (code: number) => {
   if (Object.values(SecurityType).includes(code)) {
     return code as SecurityType;
   }
-  return undefined;
+  return SecurityType.UNKNOWN;
 };
 
 interface Props {

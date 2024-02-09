@@ -1,14 +1,17 @@
-import React, { useRef } from 'react';
+import React, { useRef, useState } from 'react';
 import { Helmet, useModel } from '@@/exports';
 import { Avatar, Divider, message, Popconfirm, Space, Typography } from 'antd';
 import { ActionType, ProColumns, ProTable } from '@ant-design/pro-components';
 import { deletePermission, getPermissions } from '@/services/adminService';
 import { BASE_URL } from '@/constants';
+import EditModalComponent from '@/pages/admin/overview/components/permission/components/EditModal';
 
 const PermissionComponent: React.FC = () => {
   const { initialState } = useModel('@@initialState');
   const loginUser = initialState?.loginUser;
   const actionRef = useRef<ActionType>();
+  const [permission, setPermission] = useState<Permission.PermissionVO | undefined>(undefined);
+  const [updateModalVisible, setUpdateModalVisible] = useState<boolean>(false);
 
   const columns: ProColumns<Permission.PermissionVO>[] = [{
     title: 'ID',
@@ -75,6 +78,8 @@ const PermissionComponent: React.FC = () => {
       <Space split={<Divider type="vertical" />}>
         <Typography.Link
           onClick={() => {
+            setPermission(record);
+            setUpdateModalVisible(true);
           }}
         >
           编辑
@@ -139,6 +144,14 @@ const PermissionComponent: React.FC = () => {
       }}
       columns={columns}
     />
+    <EditModalComponent
+      permission={permission}
+      modalVisible={updateModalVisible}
+      onCancel={() => setUpdateModalVisible(false)}
+      onFinish={() => {
+        setUpdateModalVisible(false);
+        actionRef.current?.reload();
+      }} />
   </>);
 };
 export default PermissionComponent;

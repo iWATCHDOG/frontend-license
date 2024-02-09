@@ -1,8 +1,8 @@
 import React, { useRef, useState } from 'react';
 import { Helmet, useModel } from '@@/exports';
 import { ActionType, ProList } from '@ant-design/pro-components';
-import { Button, Space, Tag } from 'antd';
-import { getLogByRequestID, getLogs } from '@/services/adminService';
+import { Button, message, Popconfirm, Space, Tag, Typography } from 'antd';
+import { addBlacklist, getLogByRequestID, getLogs } from '@/services/adminService';
 import LogDrawer from '@/pages/admin/overview/components/archives/components/LogDrawer';
 import TimeShow from '@/components/TimeShow';
 
@@ -142,6 +142,25 @@ const LogComponent: React.FC = () => {
                   setLog(data);
                   setLoading(false);
                 }}>详情</Button>
+                <Popconfirm
+                  title="您确定要拉黑吗？"
+                  onConfirm={async () => {
+                    const hide = message.loading('处理中');
+                    try {
+                      await addBlacklist(row.id as number);
+                      message.success('拉黑成功!');
+                      actionRef.current?.reload();
+                    } catch (e: any) {
+                      message.error(e.message);
+                    } finally {
+                      hide();
+                    }
+                  }}
+                  okText="确认"
+                  cancelText="取消"
+                >
+                  <Typography.Link type="danger">拉黑</Typography.Link>
+                </Popconfirm>
               </Space>
             </>);
           },

@@ -62,4 +62,10 @@ declare namespace AdminType {
     permission: string;
     expiry: number;
   }
+
+  interface PermissionUpdateRequest {
+    id: number;
+    permission: string;
+    expiry: number;
+  }
 }

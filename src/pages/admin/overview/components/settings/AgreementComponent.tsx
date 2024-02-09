@@ -9,7 +9,7 @@ const AgreementComponent: React.FC = () => {
     <Helmet>
       <title>用户协议 - 设置</title>
     </Helmet>
-    {formatString('测试{data:1738842476000}哈哈哈{permission:gro.123}')}
+    {formatString('修改权限：{old:{permission:*},new:{permission:null}}，过期时间：{old:{date:0},new:{date:1708846587023}}')}
     Agreement</>);
 };
 export default AgreementComponent;

@@ -100,8 +100,10 @@ export const request: RequestConfig = {
     const code = data.code ?? 50000;
     // 未登录，且不为获取用户登录信息接口
     if (code === 40100 && !path.includes('user/get/login') && !location.pathname.includes('/user/login')) {
-      // 重定向至401页面
-      history.replace('/401?redirect=' + window.location.href);
+      if (!(window.location.pathname === '/')) {
+        // 重定向至401页面
+        history.replace('/401');
+      }
       throw new Error(`${data.message} 请求ID: ${requestId}`);
     }
     if (code !== 20000) {
