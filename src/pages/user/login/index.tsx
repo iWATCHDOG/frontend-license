@@ -1,5 +1,5 @@
 import { userLogin } from '@/services/userService';
-import { GithubOutlined, LockOutlined, UserOutlined } from '@ant-design/icons';
+import { createFromIconfontCN, GithubOutlined, LockOutlined, UserOutlined } from '@ant-design/icons';
 import { LoginForm, ProFormInstance, ProFormText } from '@ant-design/pro-components';
 import { useModel } from '@umijs/max';
 import { Checkbox, message, Modal, Skeleton, Space } from 'antd';
@@ -31,6 +31,10 @@ export default () => {
     verticalAlign: 'middle',
     cursor: 'pointer',
   };
+
+  const IconFont = createFromIconfontCN({
+    scriptUrl: '//at.alicdn.com/t/c/font_4443134_jcggo4h6b6r.js',
+  });
 
   /**
    * 用户登录
@@ -103,6 +107,12 @@ export default () => {
             其他登录方式
             <a href={BASE_URL + '/oauth/github'} style={{ color: 'inherit' }}>
               <GithubOutlined style={iconStyles} />
+            </a>
+            <a href={BASE_URL + '/oauth/gitee'} style={{ color: 'inherit' }}>
+              <IconFont style={{ fontSize: '28px' }} type={'icon-gitee'} />
+            </a>
+            <a href={BASE_URL + '/oauth/microsoft'} style={{ color: 'inherit' }}>
+              <IconFont style={{ fontSize: '20px' }} type={'icon-microsoft1'} />
             </a>
           </Space>
         }

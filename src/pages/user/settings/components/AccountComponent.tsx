@@ -5,7 +5,7 @@ import Title from 'antd/es/typography/Title';
 import { Button, Divider, message, Modal, Space, Typography } from 'antd';
 import { deleteUser, getOAuthInfo, unBindOAuth } from '@/services/userService';
 import { stringify } from 'querystring';
-import { GithubOutlined } from '@ant-design/icons';
+import { createFromIconfontCN, GithubOutlined } from '@ant-design/icons';
 import { ProList } from '@ant-design/pro-components';
 import { BASE_URL } from '@/constants';
 
@@ -14,13 +14,29 @@ const { Text, Link } = Typography;
 const AccountComponent: React.FC = () => {
   type OAuthDataItem = (typeof defaultOAuthData)[number];
   const [githubInfo, setGithubInfo] = useState<string | undefined>(undefined);
+  const [giteeInfo, setGiteeInfo] = useState<string | undefined>(undefined);
+  const [micorosoftInfo, setMicrosoftInfo] = useState<string | undefined>(undefined);
   const { initialState, setInitialState } = useModel('@@initialState');
+
+  const IconFont = createFromIconfontCN({
+    scriptUrl: '//at.alicdn.com/t/c/font_4443134_jcggo4h6b6r.js',
+  });
   const defaultOAuthData = [
     {
       id: 3,
       name: 'GitHub',
       image: <GithubOutlined />,
       desc: githubInfo ?? 'Loading...',
+    }, {
+      id: 5,
+      name: 'Gitee',
+      image: <IconFont type={'icon-gitee'} />,
+      desc: giteeInfo ?? 'Loading...',
+    }, {
+      id: 6,
+      name: 'Microsoft',
+      image: <IconFont type={'icon-microsoft1'} />,
+      desc: micorosoftInfo ?? 'Loading...',
     },
   ];
   // eslint-disable-next-line react-hooks/rules-of-hooks
@@ -82,11 +98,31 @@ const AccountComponent: React.FC = () => {
             item.desc = '未绑定';
             setGithubInfo('未绑定');
           }
+        } else if (item.id === 5) {
+          if (ret.data) {
+            item.desc = ret.data;
+            setGiteeInfo(ret.data);
+          } else {
+            item.desc = '未绑定';
+            setGiteeInfo('未绑定');
+          }
+        } else if (item.id === 6) {
+          if (ret.data) {
+            item.desc = ret.data;
+            setMicrosoftInfo(ret.data);
+          } else {
+            item.desc = '未绑定';
+            setMicrosoftInfo('未绑定');
+          }
         }
       } catch (e: any) {
         item.desc = '未绑定';
         if (item.id === 3) {
           setGithubInfo('未绑定');
+        } else if (item.id === 5) {
+          setGiteeInfo('未绑定');
+        } else if (item.id === 6) {
+          setMicrosoftInfo('未绑定');
         }
       }
     }
@@ -161,15 +197,21 @@ const AccountComponent: React.FC = () => {
                   });
                 } else {
                   const hide = message.loading('跳转中');
+                  localStorage.setItem('refreshing', 'refreshing');
+                  localStorage.setItem('redirect', window.location.href);
                   if (row.id === 3) {
                     // GitHub
-                    localStorage.setItem('refreshing', 'refreshing');
-                    localStorage.setItem('redirect', window.location.href);
                     window.location.href = BASE_URL + '/oauth/github';
-                    setTimeout(() => {
-                      localStorage.removeItem('refreshing');
-                    }, 300);
+                  } else if (row.id === 5) {
+                    // Gitee
+                    window.location.href = BASE_URL + '/oauth/gitee';
+                  } else if (row.id === 6) {
+                    // Microsoft
+                    window.location.href = BASE_URL + '/oauth/microsoft';
                   }
+                  setTimeout(() => {
+                    localStorage.removeItem('refreshing');
+                  }, 300);
                   hide();
                 }
               }
