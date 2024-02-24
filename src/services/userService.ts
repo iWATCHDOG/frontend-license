@@ -28,11 +28,12 @@ export async function userLogout() {
 /**
  * 用户登录
  */
-export async function userLogin(params: UserType.UserLoginRequest) {
+export async function userLogin(params: UserType.UserLoginRequest, res: RootType.CaptchaResult) {
   return request<BaseResponse<UserType.UserVO>>('/user/login', {
     method: 'GET',
     headers: {
       'Content-Type': 'application/json',
+      'captcha': JSON.stringify(res),
     },
     params: params,
   });

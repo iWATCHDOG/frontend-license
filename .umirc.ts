@@ -28,5 +28,11 @@ export default defineConfig({
   },
   routes,
   npmClient: 'pnpm',
+  headScripts: [
+    {
+      src: 'https://turing.captcha.qcloud.com/TCaptcha.js', // 这是 Geetest 的 SDK 地址
+      defer: true, // 如果需要延迟加载，可以添加 defer 属性
+    },
+  ],
 });
 

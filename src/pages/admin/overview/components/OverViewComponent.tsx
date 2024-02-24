@@ -20,13 +20,6 @@ const OverViewComponent: React.FC = () => {
     let start = value;
     if (first) {
       start = 0;
-    } else {
-      // 如果小于1000，则为0
-      if (start < 1000) {
-        start = 0;
-      } else {
-        start = start - 50;
-      }
     }
     return <CountUp start={start} end={value} separator="," />;
   };

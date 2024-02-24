@@ -38,25 +38,38 @@ export default () => {
    */
   const doUserLogin = async (fields: UserType.UserLoginRequest) => {
     const hide = message.loading('登录中');
-    try {
-      const res = await userLogin(fields);
-      message.success('登录成功');
-      // 记录登录信息
-      setInitialState({
-        ...initialState,
-        loginUser: res.data,
-      } as InitialState);
-      // 写入 token
-      let date = new Date();
-      date.setDate(date.getDate() + 7);
-      document.cookie = `loginToken=${res.data.token}; expires=${date.toUTCString()};`;
-      // 重定向到之前页面
-      window.location.href = searchParams.get('redirect') ?? '/';
-    } catch (e: any) {
-      message.error(e.message);
-    } finally {
-      hide();
-    }
+
+    // @ts-ignore
+    const captcha1 = new TencentCaptcha('190249560', async function(cr) {
+      const bc: RootType.CaptchaResult = {
+        ret: cr.ret,
+        ticket: cr.ticket,
+        CaptchaAppId: cr.CaptchaAppId,
+        bizState: cr.bizState,
+        randstr: cr.randstr,
+      };
+      console.log(cr);
+      try {
+        const res = await userLogin(fields, bc);
+        message.success('登录成功');
+        // 记录登录信息
+        setInitialState({
+          ...initialState,
+          loginUser: res.data,
+        } as InitialState);
+        // 写入 token
+        let date = new Date();
+        date.setDate(date.getDate() + 7);
+        document.cookie = `loginToken=${res.data.token}; expires=${date.toUTCString()};`;
+        // 重定向到之前页面
+        window.location.href = searchParams.get('redirect') ?? '/';
+      } catch (e: any) {
+        message.error(e.message);
+      } finally {
+        hide();
+      }
+    });
+    captcha1.show();
   };
 
   useEffect(() => {
@@ -106,7 +119,6 @@ export default () => {
                 setChecked(true);
                 // 提交
                 formRef.current?.submit();
-
               },
               onCancel() {
                 message.error('您未同意用户协议，无法登录');

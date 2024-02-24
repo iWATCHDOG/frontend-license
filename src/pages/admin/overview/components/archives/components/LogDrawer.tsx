@@ -1,8 +1,9 @@
-import React, { PropsWithChildren } from 'react';
+import React, { PropsWithChildren, useState } from 'react';
 import { Drawer, Skeleton } from 'antd';
 import { ProDescriptions } from '@ant-design/pro-components';
 // @ts-ignore
 import humanizeDuration from 'humanize-duration';
+import { EyeOutlined } from '@ant-design/icons';
 
 interface Props {
   log?: AdminType.Log;
@@ -24,6 +25,7 @@ const LogDrawer: React.FC<PropsWithChildren<Props>> = (props) => {
     delimiter: ' ',
     largest: 1,
   });
+  const [csParams, setCsParams] = useState(false);
 
   const fillZero2 = (s: number) => {
     if (s < 10) {
@@ -52,6 +54,7 @@ const LogDrawer: React.FC<PropsWithChildren<Props>> = (props) => {
       destroyOnClose
       closable={false}
       onClose={() => {
+        setCsParams(false);
         onCancel();
       }}
       open={drawerVisible}
@@ -84,13 +87,12 @@ const LogDrawer: React.FC<PropsWithChildren<Props>> = (props) => {
           </ProDescriptions.Item>
           <ProDescriptions.Item
             span={2}
-            valueType="text"
+            valueType="jsonCode"
             contentStyle={{
               maxWidth: '80%',
             }}
-            ellipsis
-            label="UserAgent">
-            {log?.userAgent}
+            label="Headers">
+            {log?.headers}
           </ProDescriptions.Item>
           <ProDescriptions.Item
             span={1}
@@ -117,18 +119,14 @@ const LogDrawer: React.FC<PropsWithChildren<Props>> = (props) => {
             contentStyle={{
               maxWidth: '80%',
             }}
-            ellipsis
-            label="Cookies">
-            {log?.cookies}
-          </ProDescriptions.Item>
-          <ProDescriptions.Item
-            span={2}
-            valueType="text"
-            contentStyle={{
-              maxWidth: '80%',
-            }}
             label="参数">
-            {log?.params}
+            <div onClick={() => {
+              setCsParams(!csParams);
+            }}>
+              {csParams ? log?.params : <>
+                <EyeOutlined /> 已隐藏, 点击查看
+              </>}
+            </div>
           </ProDescriptions.Item>
           <ProDescriptions.Item
             span={2}

@@ -5,6 +5,7 @@ declare namespace AdminType {
     requestId?: string;
     ip?: string;
     userAgent?: string;
+    headers?: string;
     url?: string;
     method?: string;
     cookies?: string;

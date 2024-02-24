@@ -11,4 +11,12 @@ declare namespace RootType {
     content: string;
     type: number;
   }
+
+  interface CaptchaResult {
+    ret: number;
+    ticket: string;
+    CaptchaAppId?: number;
+    bizState?: string;
+    randstr: string;
+  }
 }
