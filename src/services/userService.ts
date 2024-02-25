@@ -52,11 +52,12 @@ export async function userLoginByToken(token: string) {
 /**
  * 邮箱验证码请求
  */
-export async function emailCodeRequest(email: string) {
+export async function emailCodeRequest(email: string, res: RootType.CaptchaResult) {
   return request<BaseResponse<boolean>>('/user/create/email', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
+      'captcha': JSON.stringify(res),
     },
     params: { email },
   });
@@ -65,11 +66,12 @@ export async function emailCodeRequest(email: string) {
 /**
  * 用户注册
  */
-export async function userRegister(params: UserType.UserCreateRequest) {
-  return request<BaseResponse<number>>('/user/create', {
+export async function userRegister(params: UserType.UserCreateRequest, res: RootType.CaptchaResult) {
+  return request<BaseResponse<UserType.UserVO>>('/user/create', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
+      'captcha': JSON.stringify(res),
     },
     params: params,
   });
@@ -78,11 +80,12 @@ export async function userRegister(params: UserType.UserCreateRequest) {
 /**
  * 邮箱找回
  */
-export async function emailForget(email: string) {
+export async function emailForget(email: string, res: RootType.CaptchaResult) {
   return request<BaseResponse<boolean>>('/user/forget/email', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
+      'captcha': JSON.stringify(res),
     },
     params: { email },
   });
@@ -104,12 +107,13 @@ export async function checkForgetPasswordToken(token: string) {
 /**
  * 重置密码
  */
-export async function forgetPasswordB(password: string, token: string) {
+export async function forgetPasswordB(password: string, token: string, res: RootType.CaptchaResult) {
   return request<BaseResponse<boolean>>('/user/forget/password', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
       'forgetToken': token,
+      'captcha': JSON.stringify(res),
     },
     params: { password },
   });

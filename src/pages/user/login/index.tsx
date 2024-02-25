@@ -1,5 +1,12 @@
 import { userLogin } from '@/services/userService';
-import { createFromIconfontCN, GithubOutlined, LockOutlined, UserOutlined } from '@ant-design/icons';
+import {
+  BilibiliOutlined,
+  createFromIconfontCN,
+  GithubOutlined,
+  LockOutlined,
+  QqOutlined,
+  UserOutlined,
+} from '@ant-design/icons';
 import { LoginForm, ProFormInstance, ProFormText } from '@ant-design/pro-components';
 import { useModel } from '@umijs/max';
 import { Checkbox, message, Modal, Skeleton, Space } from 'antd';
@@ -52,7 +59,6 @@ export default () => {
         bizState: cr.bizState,
         randstr: cr.randstr,
       };
-      console.log(cr);
       try {
         const res = await userLogin(fields, bc);
         message.success('登录成功');
@@ -90,7 +96,7 @@ export default () => {
   }, []);
 
   // @ts-ignore
-  return (<div
+  return <div
     style={{
       height: '100vh',
       backgroundSize: '100% 100%',
@@ -105,14 +111,20 @@ export default () => {
         actions={
           <Space>
             其他登录方式
+            <a href={BASE_URL + '/oauth/qq'} style={{ color: 'inherit' }}>
+              <QqOutlined style={iconStyles} />
+            </a>
             <a href={BASE_URL + '/oauth/github'} style={{ color: 'inherit' }}>
               <GithubOutlined style={iconStyles} />
             </a>
             <a href={BASE_URL + '/oauth/gitee'} style={{ color: 'inherit' }}>
-              <IconFont style={{ fontSize: '28px' }} type={'icon-gitee'} />
+              <IconFont style={iconStyles} type={'icon-gitee'} />
             </a>
             <a href={BASE_URL + '/oauth/microsoft'} style={{ color: 'inherit' }}>
-              <IconFont style={{ fontSize: '20px' }} type={'icon-microsoft1'} />
+              <IconFont style={iconStyles} type={'icon-microsoft1'} />
+            </a>
+            <a href={BASE_URL + '/oauth/bilibili'} style={{ color: 'inherit' }}>
+              <BilibiliOutlined style={iconStyles} />
             </a>
           </Space>
         }
@@ -121,9 +133,7 @@ export default () => {
           if (!checked) {
             Modal.confirm({
               title: '用户协议',
-              content: (
-                <p>我已阅读并同意《用户协议》</p>
-              ),
+              content: <p>我已阅读并同意《用户协议》</p>,
               onOk() {
                 // 设置同意用户协议
                 setChecked(true);
@@ -202,5 +212,5 @@ export default () => {
         </div>
       </LoginForm>
     </Skeleton>
-  </div>);
+  </div>;
 };

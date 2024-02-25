@@ -5,7 +5,7 @@ import Title from 'antd/es/typography/Title';
 import { Button, Divider, message, Modal, Space, Typography } from 'antd';
 import { deleteUser, getOAuthInfo, unBindOAuth } from '@/services/userService';
 import { stringify } from 'querystring';
-import { createFromIconfontCN, GithubOutlined } from '@ant-design/icons';
+import { BilibiliOutlined, createFromIconfontCN, GithubOutlined, QqOutlined } from '@ant-design/icons';
 import { ProList } from '@ant-design/pro-components';
 import { BASE_URL } from '@/constants';
 
@@ -13,15 +13,23 @@ const { Text, Link } = Typography;
 
 const AccountComponent: React.FC = () => {
   type OAuthDataItem = (typeof defaultOAuthData)[number];
+  const [qqInfo, setQqInfo] = useState<string | undefined>(undefined);
   const [githubInfo, setGithubInfo] = useState<string | undefined>(undefined);
   const [giteeInfo, setGiteeInfo] = useState<string | undefined>(undefined);
-  const [micorosoftInfo, setMicrosoftInfo] = useState<string | undefined>(undefined);
+  const [microsoftInfo, setMicrosoftInfo] = useState<string | undefined>(undefined);
+  const [bilibiliInfo, setBilibiliInfo] = useState<string | undefined>(undefined);
   const { initialState, setInitialState } = useModel('@@initialState');
 
   const IconFont = createFromIconfontCN({
     scriptUrl: '//at.alicdn.com/t/c/font_4443134_jcggo4h6b6r.js',
   });
   const defaultOAuthData = [
+    {
+      id: 2,
+      name: 'QQ',
+      image: <QqOutlined />,
+      desc: qqInfo ?? 'Loading...',
+    },
     {
       id: 3,
       name: 'GitHub',
@@ -36,7 +44,12 @@ const AccountComponent: React.FC = () => {
       id: 6,
       name: 'Microsoft',
       image: <IconFont type={'icon-microsoft1'} />,
-      desc: micorosoftInfo ?? 'Loading...',
+      desc: microsoftInfo ?? 'Loading...',
+    }, {
+      id: 7,
+      name: '哔哩哔哩',
+      image: <BilibiliOutlined />,
+      desc: bilibiliInfo ?? 'Loading...',
     },
   ];
   // eslint-disable-next-line react-hooks/rules-of-hooks
@@ -90,7 +103,15 @@ const AccountComponent: React.FC = () => {
     for (const item of defaultOAuthData) {
       try {
         const ret = await getOAuthInfo(item.id);
-        if (item.id === 3) {
+        if (item.id === 2) {
+          if (ret.data) {
+            item.desc = ret.data;
+            setQqInfo(ret.data);
+          } else {
+            item.desc = '未绑定';
+            setQqInfo('未绑定');
+          }
+        } else if (item.id === 3) {
           if (ret.data) {
             item.desc = ret.data;
             setGithubInfo(ret.data);
@@ -114,15 +135,27 @@ const AccountComponent: React.FC = () => {
             item.desc = '未绑定';
             setMicrosoftInfo('未绑定');
           }
+        } else if (item.id === 7) {
+          if (ret.data) {
+            item.desc = ret.data;
+            setBilibiliInfo(ret.data);
+          } else {
+            item.desc = '未绑定';
+            setBilibiliInfo('未绑定');
+          }
         }
       } catch (e: any) {
         item.desc = '未绑定';
-        if (item.id === 3) {
+        if (item.id === 2) {
+          setQqInfo('未绑定');
+        } else if (item.id === 3) {
           setGithubInfo('未绑定');
         } else if (item.id === 5) {
           setGiteeInfo('未绑定');
         } else if (item.id === 6) {
           setMicrosoftInfo('未绑定');
+        } else if (item.id === 7) {
+          setBilibiliInfo('未绑定');
         }
       }
     }
@@ -199,7 +232,10 @@ const AccountComponent: React.FC = () => {
                   const hide = message.loading('跳转中');
                   localStorage.setItem('refreshing', 'refreshing');
                   localStorage.setItem('redirect', window.location.href);
-                  if (row.id === 3) {
+                  if (row.id === 2) {
+                    // QQ
+                    window.location.href = BASE_URL + '/oauth/qq';
+                  } else if (row.id === 3) {
                     // GitHub
                     window.location.href = BASE_URL + '/oauth/github';
                   } else if (row.id === 5) {
@@ -208,6 +244,9 @@ const AccountComponent: React.FC = () => {
                   } else if (row.id === 6) {
                     // Microsoft
                     window.location.href = BASE_URL + '/oauth/microsoft';
+                  } else if (row.id === 7) {
+                    // Bilibili
+                    window.location.href = BASE_URL + '/oauth/bilibili';
                   }
                   setTimeout(() => {
                     localStorage.removeItem('refreshing');

@@ -25,42 +25,65 @@ export default () => {
 
   const sendForgetMail = async (fields: Record<string, any>) => {
     const hide = message.loading('处理中');
-    try {
-      // 判断是否是邮箱
-      if (forgetType === 'email') {
-        // 邮箱找回
-        const email = fields.email;
-        await emailForget(email);
-        message.success('邮件已发送，请注意查收');
-      } else if (forgetType === 'phone') {
-        // 手机号找回
-        const phone = fields.phone;
-        message.error('暂不支持手机号找回');
-      } else {
-        message.error('找回方式错误');
+
+    // @ts-ignore
+    const captcha1 = new TencentCaptcha('190249560', async function(cr) {
+      const bc: RootType.CaptchaResult = {
+        ret: cr.ret,
+        ticket: cr.ticket,
+        CaptchaAppId: cr.CaptchaAppId,
+        bizState: cr.bizState,
+        randstr: cr.randstr,
+      };
+      try {
+        // 判断是否是邮箱
+        if (forgetType === 'email') {
+          // 邮箱找回
+          const email = fields.email;
+          await emailForget(email, bc);
+          message.success('邮件已发送，请注意查收');
+        } else if (forgetType === 'phone') {
+          // 手机号找回
+          const phone = fields.phone;
+          message.error('暂不支持手机号找回');
+        } else {
+          message.error('找回方式错误');
+        }
+      } catch (e: any) {
+        message.error(e.message);
+      } finally {
+        hide();
       }
-    } catch (e: any) {
-      message.error(e.message);
-    } finally {
-      hide();
-    }
+    });
+    captcha1.show();
   };
 
   const forgetPassword = async (fields: Record<string, any>) => {
     const hide = message.loading('处理中');
-    try {
-      const token = params.token;
-      const password = fields.password;
-      await forgetPasswordB(password, token ? token : '');
-      message.success('重置成功');
-      setTimeout(() => {
-        window.location.href = '/user/login';
-      }, 300);
-    } catch (e: any) {
-      message.error(e.message);
-    } finally {
-      hide();
-    }
+    // @ts-ignore
+    const captcha1 = new TencentCaptcha('190249560', async function(cr) {
+      const bc: RootType.CaptchaResult = {
+        ret: cr.ret,
+        ticket: cr.ticket,
+        CaptchaAppId: cr.CaptchaAppId,
+        bizState: cr.bizState,
+        randstr: cr.randstr,
+      };
+      try {
+        const token = params.token;
+        const password = fields.password;
+        await forgetPasswordB(password, token ? token : '', bc);
+        message.success('重置成功');
+        setTimeout(() => {
+          window.location.href = '/user/login';
+        }, 300);
+      } catch (e: any) {
+        message.error(e.message);
+      } finally {
+        hide();
+      }
+    });
+    captcha1.show();
   };
 
   const check = async () => {

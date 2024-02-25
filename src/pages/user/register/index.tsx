@@ -5,7 +5,7 @@ import { message, Skeleton, Tabs } from 'antd';
 import React, { useEffect, useState } from 'react';
 import { DEFAULT_NAME } from '@/constants';
 import { Link } from '@@/exports';
-import { emailCodeRequest, userLogin, userRegister } from '@/services/userService';
+import { emailCodeRequest, userRegister } from '@/services/userService';
 
 type RegisterType = 'email' | 'phone';
 
@@ -20,29 +20,38 @@ export default () => {
   const [registerType, setRegisterType] = useState<RegisterType>('email');
 
   const doRegister = async (fields: UserType.UserCreateRequest) => {
-    console.log(fields);
     const hide = message.loading('处理中');
-    try {
-      await userRegister(fields);
-      message.success('注册成功');
-      // 登录
-      const lf = {
-        account: fields.email ?? fields.phone,
-        password: fields.password,
-      } as unknown as UserType.UserLoginRequest;
-      const res = await userLogin(lf);
-      // 记录登录信息
-      setInitialState({
-        ...initialState,
-        loginUser: res.data,
-      } as InitialState);
-      // 重定向到之前页面
-      window.location.href = '/';
-    } catch (e: any) {
-      message.error(e.message);
-    } finally {
-      hide();
-    }
+    // @ts-ignore
+    const captcha1 = new TencentCaptcha('190249560', async function(cr) {
+      const bc: RootType.CaptchaResult = {
+        ret: cr.ret,
+        ticket: cr.ticket,
+        CaptchaAppId: cr.CaptchaAppId,
+        bizState: cr.bizState,
+        randstr: cr.randstr,
+      };
+      try {
+        const res = await userRegister(fields, bc);
+        message.success('注册成功');
+        // 登录
+        // 写入 token
+        let date = new Date();
+        date.setDate(date.getDate() + 7);
+        document.cookie = `loginToken=${res.data.token}; expires=${date.toUTCString()};`;
+        // 记录登录信息
+        setInitialState({
+          ...initialState,
+          loginUser: res.data,
+        } as InitialState);
+        // 重定向到之前页面
+        window.location.href = '/';
+      } catch (e: any) {
+        message.error(e.message);
+      } finally {
+        hide();
+      }
+    });
+    captcha1.show();
   };
 
   useEffect(() => {
@@ -153,18 +162,30 @@ export default () => {
                 reject();
               });
             }
-            try {
-              const { data } = await emailCodeRequest(email);
-              if (data) {
-                message.success(`验证码发送成功！请注意查收`);
-              } else {
-                message.error('验证码发送失败！请稍后重试');
+
+            // @ts-ignore
+            const captcha1 = new TencentCaptcha('190249560', async function(cr) {
+              const bc: RootType.CaptchaResult = {
+                ret: cr.ret,
+                ticket: cr.ticket,
+                CaptchaAppId: cr.CaptchaAppId,
+                bizState: cr.bizState,
+                randstr: cr.randstr,
+              };
+              try {
+                const { data } = await emailCodeRequest(email, bc);
+                if (data) {
+                  message.success(`验证码发送成功！请注意查收`);
+                } else {
+                  message.error('验证码发送失败！请稍后重试');
+                }
+              } catch (e: any) {
+                message.error(e.message);
+              } finally {
+                hide();
               }
-            } catch (e: any) {
-              message.error(e.message);
-            } finally {
-              hide();
-            }
+            });
+            captcha1.show();
           }}
           placeholder="请输入邮箱"
           rules={[

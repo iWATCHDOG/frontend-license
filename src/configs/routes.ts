@@ -66,11 +66,6 @@ export default [{
     hideInMenu: true,
   }],
 }, {
-  name: '401',
-  path: '/401',
-  component: '@/pages/401.tsx',
-  hideInMenu: true,
-}, {
   name: '404',
   path: '/*',
   component: '@/pages/404.tsx',
