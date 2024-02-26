@@ -69,19 +69,22 @@ export default () => {
         bizState: cr.bizState,
         randstr: cr.randstr,
       };
-      try {
-        const token = params.token;
-        const password = fields.password;
-        await forgetPasswordB(password, token ? token : '', bc);
-        message.success('重置成功');
-        setTimeout(() => {
-          window.location.href = '/user/login';
-        }, 300);
-      } catch (e: any) {
-        message.error(e.message);
-      } finally {
-        hide();
+      if (cr.ret === 0) {
+        try {
+          const token = params.token;
+          const password = fields.password;
+          await forgetPasswordB(password, token ? token : '', bc);
+          message.success('重置成功');
+          setTimeout(() => {
+            window.location.href = '/user/login';
+          }, 300);
+        } catch (e: any) {
+          message.error(e.message);
+        }
+      } else {
+        message.error('请进行人机验证');
       }
+      hide();
     });
     captcha1.show();
   };

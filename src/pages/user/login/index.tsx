@@ -59,25 +59,28 @@ export default () => {
         bizState: cr.bizState,
         randstr: cr.randstr,
       };
-      try {
-        const res = await userLogin(fields, bc);
-        message.success('登录成功');
-        // 记录登录信息
-        setInitialState({
-          ...initialState,
-          loginUser: res.data,
-        } as InitialState);
-        // 写入 token
-        let date = new Date();
-        date.setDate(date.getDate() + 7);
-        document.cookie = `loginToken=${res.data.token}; expires=${date.toUTCString()};`;
-        // 重定向到之前页面
-        window.location.href = searchParams.get('redirect') ?? '/';
-      } catch (e: any) {
-        message.error(e.message);
-      } finally {
-        hide();
+      if (cr.ret === 0) {
+        try {
+          const res = await userLogin(fields, bc);
+          message.success('登录成功');
+          // 记录登录信息
+          setInitialState({
+            ...initialState,
+            loginUser: res.data,
+          } as InitialState);
+          // 写入 token
+          let date = new Date();
+          date.setDate(date.getDate() + 7);
+          document.cookie = `loginToken=${res.data.token}; expires=${date.toUTCString()};`;
+          // 重定向到之前页面
+          window.location.href = searchParams.get('redirect') ?? '/';
+        } catch (e: any) {
+          message.error(e.message);
+        }
+      } else {
+        message.error('请进行人机验证');
       }
+      hide();
     });
     captcha1.show();
   };

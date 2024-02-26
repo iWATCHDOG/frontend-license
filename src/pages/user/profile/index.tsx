@@ -20,6 +20,12 @@ export default () => {
         // 通过uid获取用户信息
         const res = await getUserProfile(uid);
         u = res.data;
+      } else {
+        if (username) {
+          // 通过username获取用户信息
+          const res = await getUserProfileByUsername(username);
+          u = res.data;
+        }
       }
     } catch (ignore) {
       try {

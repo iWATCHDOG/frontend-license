@@ -3,7 +3,7 @@ import { Drawer, Skeleton } from 'antd';
 import { ProDescriptions } from '@ant-design/pro-components';
 // @ts-ignore
 import humanizeDuration from 'humanize-duration';
-import { EyeOutlined } from '@ant-design/icons';
+import { EyeInvisibleOutlined } from '@ant-design/icons';
 
 interface Props {
   log?: AdminType.Log;
@@ -124,7 +124,7 @@ const LogDrawer: React.FC<PropsWithChildren<Props>> = (props) => {
               setCsParams(!csParams);
             }}>
               {csParams ? log?.params : <>
-                <EyeOutlined /> 已隐藏, 点击查看
+                <EyeInvisibleOutlined /> 已隐藏, 点击查看
               </>}
             </div>
           </ProDescriptions.Item>

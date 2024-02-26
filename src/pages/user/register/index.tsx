@@ -30,26 +30,29 @@ export default () => {
         bizState: cr.bizState,
         randstr: cr.randstr,
       };
-      try {
-        const res = await userRegister(fields, bc);
-        message.success('注册成功');
-        // 登录
-        // 写入 token
-        let date = new Date();
-        date.setDate(date.getDate() + 7);
-        document.cookie = `loginToken=${res.data.token}; expires=${date.toUTCString()};`;
-        // 记录登录信息
-        setInitialState({
-          ...initialState,
-          loginUser: res.data,
-        } as InitialState);
-        // 重定向到之前页面
-        window.location.href = '/';
-      } catch (e: any) {
-        message.error(e.message);
-      } finally {
-        hide();
+      if (cr.ret === 0) {
+        try {
+          const res = await userRegister(fields, bc);
+          message.success('注册成功');
+          // 登录
+          // 写入 token
+          let date = new Date();
+          date.setDate(date.getDate() + 7);
+          document.cookie = `loginToken=${res.data.token}; expires=${date.toUTCString()};`;
+          // 记录登录信息
+          setInitialState({
+            ...initialState,
+            loginUser: res.data,
+          } as InitialState);
+          // 重定向到之前页面
+          window.location.href = '/';
+        } catch (e: any) {
+          message.error(e.message);
+        }
+      } else {
+        message.error('请进行人机验证');
       }
+      hide();
     });
     captcha1.show();
   };
@@ -172,18 +175,21 @@ export default () => {
                 bizState: cr.bizState,
                 randstr: cr.randstr,
               };
-              try {
-                const { data } = await emailCodeRequest(email, bc);
-                if (data) {
-                  message.success(`验证码发送成功！请注意查收`);
-                } else {
-                  message.error('验证码发送失败！请稍后重试');
+              if (cr.ret === 0) {
+                try {
+                  const { data } = await emailCodeRequest(email, bc);
+                  if (data) {
+                    message.success(`验证码发送成功！请注意查收`);
+                  } else {
+                    message.error('验证码发送失败！请稍后重试');
+                  }
+                } catch (e: any) {
+                  message.error(e.message);
                 }
-              } catch (e: any) {
-                message.error(e.message);
-              } finally {
-                hide();
+              } else {
+                message.error('请进行人机验证');
               }
+              hide();
             });
             captcha1.show();
           }}

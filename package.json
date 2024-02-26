@@ -1,6 +1,7 @@
 {
   "private": true,
   "author": "花花 <73741466+xLikeWATCHDOG@users.noreply.github.com>",
+  "name": "license",
   "scripts": {
     "dev": "max dev",
     "build": "max build",
