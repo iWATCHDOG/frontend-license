@@ -1,10 +1,13 @@
 import { request } from '@@/exports';
+// @ts-ignore
+import { BaseResponse, PageInfo } from '@/global';
 
 export async function countUser() {
   return request<BaseResponse<number>>('/admin/count/user', {
     method: 'GET',
     headers: {
       'Content-Type': 'application/json',
+      'time': new Date().getTime(),
     },
   });
 }
@@ -14,6 +17,7 @@ export async function countLog() {
     method: 'GET',
     headers: {
       'Content-Type': 'application/json',
+      'time': new Date().getTime(),
     },
   });
 }
@@ -23,6 +27,7 @@ export async function countBlacklist() {
     method: 'GET',
     headers: {
       'Content-Type': 'application/json',
+      'time': new Date().getTime(),
     },
   });
 }
@@ -32,6 +37,7 @@ export async function countSecurityLog() {
     method: 'GET',
     headers: {
       'Content-Type': 'application/json',
+      'time': new Date().getTime(),
     },
   });
 }
@@ -41,6 +47,7 @@ export async function getLogs(params: AdminType.LogQueryRequest) {
     method: 'GET',
     headers: {
       'Content-Type': 'application/json',
+      'time': new Date().getTime(),
     },
     params: params,
   });
@@ -51,6 +58,7 @@ export async function getUsers(params: AdminType.UserQueryRequest) {
     method: 'GET',
     headers: {
       'Content-Type': 'application/json',
+      'time': new Date().getTime(),
     },
     params: params,
   });
@@ -61,6 +69,7 @@ export async function getPermissions(params: AdminType.PermissionQueryRequest) {
     method: 'GET',
     headers: {
       'Content-Type': 'application/json',
+      'time': new Date().getTime(),
     },
     params: params,
   });
@@ -72,6 +81,7 @@ export async function getLogByRequestID(requestId: string) {
     method: 'GET',
     headers: {
       'Content-Type': 'application/json',
+      'time': new Date().getTime(),
     },
   });
 }
@@ -81,6 +91,7 @@ export async function deleteUser(uid: number) {
     method: 'DELETE',
     headers: {
       'Content-Type': 'application/json',
+      'time': new Date().getTime(),
     },
   });
 }
@@ -90,6 +101,7 @@ export async function addPermission(params: AdminType.PermissionAddRequest) {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
+      'time': new Date().getTime(),
     },
     params: params,
   });
@@ -100,6 +112,7 @@ export async function deletePermission(id: number) {
     method: 'DELETE',
     headers: {
       'Content-Type': 'application/json',
+      'time': new Date().getTime(),
     },
   });
 }
@@ -109,6 +122,7 @@ export async function updatePermission(params: AdminType.PermissionUpdateRequest
     method: 'PUT',
     headers: {
       'Content-Type': 'application/json',
+      'time': new Date().getTime(),
     },
     params: params,
   });
@@ -119,6 +133,7 @@ export async function addBlacklist(id: number) {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
+      'time': new Date().getTime(),
     },
   });
 }

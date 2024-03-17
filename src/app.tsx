@@ -5,7 +5,9 @@ import { getLoginUser, userLoginByToken } from '@/services/userService';
 import GlobalFooter from '@/components/GlobalFooter';
 import RightContent from '@/components/GlobalHeader/RightContent';
 // @ts-ignore
-import { history, useNavigate } from 'umi';
+import { InitialState } from '@/global';
+import { setPingNumber } from '@/utils/globalUtils';
+import { getPing } from '@/services/rootService';
 
 
 function getCookie(name: string) {
@@ -56,6 +58,7 @@ export async function getInitialState(): Promise<InitialState> {
       }
     }
   }
+  await getPing();
   return defaultState;
 }
 
@@ -89,12 +92,14 @@ export const request: RequestConfig = {
   withCredentials: true, // other axios options you want
   requestInterceptors: [],
   responseInterceptors: [(response) => {
+    // 获取当前时间戳
     // 不再需要异步处理读取返回体内容，可直接在 data 中读出，部分字段可在 config 中找到
     const data: any = response.data;
     const path = response.request.responseURL;
     if (!data) {
       throw new Error('服务异常');
     }
+    // setPingNumber(time2 - time);
     // 获取requestId
     const requestId = data.requestInfo.requestId;
     const code = data.code ?? 50000;
@@ -109,7 +114,9 @@ export const request: RequestConfig = {
       console.error(`request error, path = ${path}`, data);
       throw new Error(data.message ?? '服务器错误');
     }*/
+
     // do something
+    setPingNumber(data.requestInfo.ping);
     return response;
   }],
 };

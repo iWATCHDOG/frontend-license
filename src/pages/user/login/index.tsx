@@ -13,7 +13,7 @@ import { Checkbox, message, Modal, Skeleton, Space } from 'antd';
 // @ts-ignore
 import { useSearchParams } from 'umi';
 import React, { CSSProperties, useEffect, useRef, useState } from 'react';
-import { BASE_URL, DEFAULT_NAME } from '@/constants';
+import { BASE_URL, DEFAULT_NAME, TENCENT_CAPTCHA_APP_ID } from '@/constants';
 import { Link } from '@@/exports';
 
 import type { CheckboxChangeEvent } from 'antd/es/checkbox';
@@ -51,7 +51,7 @@ export default () => {
     const hide = message.loading('登录中');
 
     // @ts-ignore
-    const captcha1 = new TencentCaptcha('190249560', async function(cr) {
+    const captcha1 = new TencentCaptcha(TENCENT_CAPTCHA_APP_ID, async function(cr) {
       const bc: RootType.CaptchaResult = {
         ret: cr.ret,
         ticket: cr.ticket,

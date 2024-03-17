@@ -2,37 +2,16 @@
 
 import { GithubOutlined, WifiOutlined } from '@ant-design/icons';
 import { DefaultFooter } from '@ant-design/pro-components';
-import React, { useEffect } from 'react';
+import React from 'react';
 import './index.less';
 import { DEFAULT_NAME } from '@/constants';
-import { getPing } from '@/services/rootService';
+import { getPingNumber } from '@/utils/globalUtils';
 
 /**
  * 全局 Footer
  */
 const GlobalFooter: React.FC = () => {
   const currentYear = new Date().getFullYear();
-  const [ping, setPing] = React.useState<number>(0);
-
-  const initPing = async () => {
-    // 获取当前时间戳
-    const time = new Date().getTime();
-    try {
-      await getPing();
-      // 获取当前时间戳
-      const time2 = new Date().getTime();
-      setPing(time2 - time);
-    } catch (e: any) {
-      setPing(-1);
-    }
-  };
-
-  const doPing = async () => {
-    await initPing();
-    setInterval(async () => {
-      await initPing();
-    }, 5000);
-  };
 
   const formatPing = (ping: number) => {
     if (ping === -1) {
@@ -55,10 +34,6 @@ const GlobalFooter: React.FC = () => {
     }
     return { color: '#52c41a' };
   };
-
-  useEffect(() => {
-    doPing();
-  }, []);
   // noinspection HtmlRequiredAltAttribute
   return (<>
       <DefaultFooter
@@ -75,12 +50,12 @@ const GlobalFooter: React.FC = () => {
             href: 'https://github.com/xLikeWATCHDOG',
             blankTarget: true,
           }, {
-            key: ping === -1 ? 'Time out' : formatPing(ping),
+            key: getPingNumber() === -1 ? 'Time out' : formatPing(getPingNumber()),
             title: (
               <>
-                <WifiOutlined style={getWifiStyle(ping)} />
+                <WifiOutlined style={getWifiStyle(getPingNumber())} />
                 {/*有颜色的字体*/}
-                <span style={getWifiStyle(ping)}>{formatPing(ping)}</span>
+                <span style={getWifiStyle(getPingNumber())}>{formatPing(getPingNumber())}</span>
               </>
             ),
             href: '',

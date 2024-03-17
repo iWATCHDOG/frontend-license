@@ -1,12 +1,12 @@
 import React, { useRef } from 'react';
-import { Avatar, Button, Space } from 'antd';
+import { Button, Space } from 'antd';
 import { ActionType, ProList } from '@ant-design/pro-components';
 import { getSecurityLogs } from '@/services/userService';
-import { BASE_URL } from '@/constants';
 import { Helmet, useModel } from '@@/exports';
 import SecurityLogTag from '@/components/SecurityLogTag';
 import TimeShow from '@/components/TimeShow';
 import { formatString } from '@/utils/stringUtils';
+import SecurityLogAvatar from '@/components/SecurityLogAvatar';
 
 const SecurityLogComponent: React.FC = () => {
   const { initialState } = useModel('@@initialState');
@@ -91,10 +91,7 @@ const SecurityLogComponent: React.FC = () => {
           search: false,
           render: (_, row) => {
             return (
-              <Avatar
-                size={40}
-                src={BASE_URL + '/user/get/avatar/' + row?.uid}
-              />
+              <SecurityLogAvatar row={row} />
             );
           },
         },

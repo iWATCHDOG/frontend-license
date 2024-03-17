@@ -30,7 +30,6 @@ export default defineConfig({
   npmClient: 'pnpm',
   headScripts: [
     { src: 'https://turing.captcha.qcloud.com/TCaptcha.js' },
-    { src: '/license/sakura.js' },
   ],
   // 这一部分是配置 子目录 的
   /*publicPath: '/license/',

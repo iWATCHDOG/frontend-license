@@ -1,5 +1,7 @@
 import { request } from '@umijs/max';
 import { RcFile } from 'antd/es/upload';
+// @ts-ignore
+import { BaseResponse, PageInfo } from '@/global';
 
 /**
  * 获取当前登录用户
@@ -9,6 +11,7 @@ export async function getLoginUser() {
     method: 'GET',
     headers: {
       'Content-Type': 'application/json',
+      'time': new Date().getTime(),
     },
   });
 }
@@ -21,6 +24,7 @@ export async function userLogout() {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
+      'time': new Date().getTime(),
     },
   });
 }
@@ -34,6 +38,7 @@ export async function userLogin(params: UserType.UserLoginRequest, res: RootType
     headers: {
       'Content-Type': 'application/json',
       'captcha': JSON.stringify(res),
+      'time': new Date().getTime(),
     },
     params: params,
   });
@@ -45,6 +50,7 @@ export async function userLoginByToken(token: string) {
     headers: {
       'Content-Type': 'application/json',
       'loginToken': token,
+      'time': new Date().getTime(),
     },
   });
 }
@@ -58,6 +64,7 @@ export async function emailCodeRequest(email: string, res: RootType.CaptchaResul
     headers: {
       'Content-Type': 'application/json',
       'captcha': JSON.stringify(res),
+      'time': new Date().getTime(),
     },
     params: { email },
   });
@@ -72,6 +79,7 @@ export async function userRegister(params: UserType.UserCreateRequest, res: Root
     headers: {
       'Content-Type': 'application/json',
       'captcha': JSON.stringify(res),
+      'time': new Date().getTime(),
     },
     params: params,
   });
@@ -86,6 +94,7 @@ export async function emailForget(email: string, res: RootType.CaptchaResult) {
     headers: {
       'Content-Type': 'application/json',
       'captcha': JSON.stringify(res),
+      'time': new Date().getTime(),
     },
     params: { email },
   });
@@ -99,6 +108,7 @@ export async function checkForgetPasswordToken(token: string) {
     method: 'GET',
     headers: {
       'Content-Type': 'application/json',
+      'time': new Date().getTime(),
     },
     params: { token },
   });
@@ -114,6 +124,7 @@ export async function forgetPasswordB(password: string, token: string, res: Root
       'Content-Type': 'application/json',
       'forgetToken': token,
       'captcha': JSON.stringify(res),
+      'time': new Date().getTime(),
     },
     params: { password },
   });
@@ -127,6 +138,7 @@ export async function updateUserProfile(params: UserType.UpdateUserProfileReques
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
+      'time': new Date().getTime(),
     },
     params: params,
   });
@@ -142,6 +154,7 @@ export async function updateUserAvatar(avatar: RcFile) {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
+      'time': new Date().getTime(),
     },
     data: formData,
   });
@@ -155,6 +168,7 @@ export async function updateUserPassword(params: UserType.UpdateUserPasswordRequ
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
+      'time': new Date().getTime(),
     },
     params: params,
   });
@@ -168,6 +182,7 @@ export async function deleteUser() {
     method: 'DELETE',
     headers: {
       'Content-Type': 'application/json',
+      'time': new Date().getTime(),
     },
   });
 }
@@ -177,6 +192,7 @@ export async function getOAuthInfo(type: number) {
     method: 'GET',
     headers: {
       'Content-Type': 'application/json',
+      'time': new Date().getTime(),
     },
     params: { type },
   });
@@ -187,6 +203,7 @@ export async function unBindOAuth(type: number) {
     method: 'DELETE',
     headers: {
       'Content-Type': 'application/json',
+      'time': new Date().getTime(),
     },
     params: { type },
   });
@@ -197,16 +214,18 @@ export async function bindOAuth(type: number) {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
+      'time': new Date().getTime(),
     },
     params: { type },
   });
 }
 
 export async function getSecurityLogs(params: UserType.UserSecurityLogQueryRequest) {
-  return request<BaseResponse<PageInfo<UserType.SecurityLog[]>>>('/user/security/log', {
+  return request<BaseResponse<PageInfo<UserType.SecurityLogVO[]>>>('/user/security/log', {
     method: 'GET',
     headers: {
       'Content-Type': 'application/json',
+      'time': new Date().getTime(),
     },
     params: params,
   });
@@ -217,6 +236,7 @@ export async function getUsername(uid: number) {
     method: 'GET',
     headers: {
       'Content-Type': 'application/json',
+      'time': new Date().getTime(),
     },
   });
 }
@@ -226,6 +246,7 @@ export async function getUserProfile(uid: number) {
     method: 'GET',
     headers: {
       'Content-Type': 'application/json',
+      'time': new Date().getTime(),
     },
   });
 }
@@ -235,6 +256,7 @@ export async function getUserProfileByUsername(username: string) {
     method: 'GET',
     headers: {
       'Content-Type': 'application/json',
+      'time': new Date().getTime(),
     },
   });
 }

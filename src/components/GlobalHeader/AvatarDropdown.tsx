@@ -103,7 +103,12 @@ const AvatarDropdown: React.FC = () => {
         // 处于刷新状态
         try {
           const res = await getNotifyList();
-          res.data.forEach(notify => {
+          res.data.forEach((notify: {
+            type: any;
+            title: any;
+            content: string | number | boolean | React.ReactElement<any, string | React.JSXElementConstructor<any>> | Iterable<React.ReactNode> | React.ReactPortal | null | undefined;
+            id: string | number | boolean | React.ReactElement<any, string | React.JSXElementConstructor<any>> | Iterable<React.ReactNode> | React.ReactPortal | null | undefined;
+          }) => {
             let type: string = 'info';
             switch (notify.type) {
               case 0:

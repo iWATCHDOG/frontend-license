@@ -3,7 +3,7 @@ import { LoginForm, ProFormCaptcha, ProFormText } from '@ant-design/pro-componen
 import { useModel } from '@umijs/max';
 import { message, Skeleton, Tabs } from 'antd';
 import React, { useEffect, useState } from 'react';
-import { DEFAULT_NAME } from '@/constants';
+import { DEFAULT_NAME, TENCENT_CAPTCHA_APP_ID } from '@/constants';
 import { Link } from '@@/exports';
 import { emailCodeRequest, userRegister } from '@/services/userService';
 
@@ -22,7 +22,7 @@ export default () => {
   const doRegister = async (fields: UserType.UserCreateRequest) => {
     const hide = message.loading('处理中');
     // @ts-ignore
-    const captcha1 = new TencentCaptcha('190249560', async function(cr) {
+    const captcha1 = new TencentCaptcha(TENCENT_CAPTCHA_APP_ID, async function(cr) {
       const bc: RootType.CaptchaResult = {
         ret: cr.ret,
         ticket: cr.ticket,

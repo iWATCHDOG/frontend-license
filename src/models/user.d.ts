@@ -62,12 +62,34 @@ declare namespace UserType {
   interface SecurityLog {
     id?: number;
     uid?: number;
+    avatar?: string;
     title?: string;
     types?: string;
     ip?: string;
     info?: string;
     createTime?: Date;
     updateTime?: Date;
+  }
+
+  interface SecurityLogVO {
+    id?: number;
+    uid?: number;
+    avatar?: Avatar;
+    title?: string;
+    types?: string;
+    ip?: string;
+    info?: string;
+    createTime?: Date;
+    updateTime?: Date;
+  }
+
+  interface Avatar {
+    avatars: AvatarData[];
+  }
+
+  interface AvatarData {
+    code: number;
+    data: object;
   }
 
   interface UserSecurityLogQueryRequest extends PageRequest {

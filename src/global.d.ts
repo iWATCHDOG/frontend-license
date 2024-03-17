@@ -1,5 +1,3 @@
-import Permission = Permission.Permission;
-
 /**
  * 分页信息
  */
@@ -40,6 +38,7 @@ interface BaseResponse<T> {
 interface RequestInfo {
   requestId: string;
   timestamp: number;
+  ping: number;
   cost: number;
 }
 
