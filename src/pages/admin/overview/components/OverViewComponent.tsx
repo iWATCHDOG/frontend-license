@@ -51,9 +51,9 @@ const OverViewComponent: React.FC = () => {
     setFirst(true);
     await init();
     setFirst(false);
-    setInterval(async () => {
+    /*setInterval(async () => {
       await init();
-    }, 10000);
+    }, 10000);*/
     setInited(true);
   };
 

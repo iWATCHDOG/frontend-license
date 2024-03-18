@@ -1,11 +1,10 @@
 // noinspection JSIgnoredPromiseFromCall
 
-import { GithubOutlined, WifiOutlined } from '@ant-design/icons';
+import { GithubOutlined } from '@ant-design/icons';
 import { DefaultFooter } from '@ant-design/pro-components';
 import React from 'react';
 import './index.less';
 import { DEFAULT_NAME } from '@/constants';
-import { getPingNumber } from '@/utils/globalUtils';
 
 /**
  * 全局 Footer
@@ -49,17 +48,16 @@ const GlobalFooter: React.FC = () => {
             ),
             href: 'https://github.com/xLikeWATCHDOG',
             blankTarget: true,
-          }, {
+          }/*, {
             key: getPingNumber() === -1 ? 'Time out' : formatPing(getPingNumber()),
             title: (
               <>
                 <WifiOutlined style={getWifiStyle(getPingNumber())} />
-                {/*有颜色的字体*/}
                 <span style={getWifiStyle(getPingNumber())}>{formatPing(getPingNumber())}</span>
               </>
             ),
             href: '',
-          }]}
+          }*/]}
       />
     </>
   );
