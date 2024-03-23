@@ -1,7 +1,7 @@
 import React, { useRef, useState } from 'react';
 import { Helmet, useModel } from '@@/exports';
 import { ActionType, ProList } from '@ant-design/pro-components';
-import { Button, message, Popconfirm, Space, Tag, Typography } from 'antd';
+import { Button, message, Popconfirm, Space, Tag } from 'antd';
 import { addBlacklist, getLogByRequestID, getLogs } from '@/services/adminService';
 import LogDrawer from '@/pages/admin/overview/components/archives/components/LogDrawer';
 import TimeShow from '@/components/TimeShow';
@@ -135,7 +135,7 @@ const LogComponent: React.FC = () => {
           render: (_, row) => {
             return (<>
               <Space>
-                <Button type={'link'} size={'small'} onClick={async () => {
+                <Button size={'small'} onClick={async () => {
                   setLoading(true);
                   setOpen(true);
                   const { data } = await getLogByRequestID(row.requestId as string);
@@ -147,7 +147,11 @@ const LogComponent: React.FC = () => {
                   onConfirm={async () => {
                     const hide = message.loading('处理中');
                     try {
-                      await addBlacklist(row.id as number);
+                      const req = {
+                        log: row.id,
+                        reason: '请求日志拉黑',
+                      } as AdminType.AddBlacklistRequest;
+                      await addBlacklist(req);
                       message.success('拉黑成功!');
                       actionRef.current?.reload();
                     } catch (e: any) {
@@ -159,7 +163,9 @@ const LogComponent: React.FC = () => {
                   okText="确认"
                   cancelText="取消"
                 >
-                  <Typography.Link type="danger">拉黑</Typography.Link>
+                  <Button size={'small'} type="primary" danger ghost>
+                    拉黑
+                  </Button>
                 </Popconfirm>
               </Space>
             </>);

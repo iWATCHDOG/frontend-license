@@ -3,6 +3,7 @@ import React, { useEffect, useState } from 'react';
 import {
   ContainerOutlined,
   ExceptionOutlined,
+  FireOutlined,
   FormOutlined,
   HomeOutlined,
   PlusSquareOutlined,
@@ -20,6 +21,7 @@ import SecurityLogComponent from '@/pages/admin/overview/components/archives/Sec
 import LogComponent from '@/pages/admin/overview/components/archives/LogComponent';
 import PermissionComponent from '@/pages/admin/overview/components/permission/PermissionCompoent';
 import PermissionAddComponent from '@/pages/admin/overview/components/permission/PermissionAddComponent';
+import BlackListComponent from '@/pages/admin/overview/components/archives/BlackListComponent';
 
 export default () => {
   const { initialState, setInitialState } = useModel('@@initialState');
@@ -76,8 +78,12 @@ export default () => {
       key: '5-2',
       label: '请求日志',
       icon: <ContainerOutlined />,
+    }, {
+      type: 'blacklist',
+      key: '5-3',
+      label: '黑名单',
+      icon: <FireOutlined />,
     }],
-
   }];
 
   const onSelected: MenuProps['onSelect'] = (e) => {
@@ -123,6 +129,8 @@ export default () => {
       setSelectedKeys(['5-1']);
     } else if (type === 'log') {
       setSelectedKeys(['5-2']);
+    } else if (type === 'blacklist') {
+      setSelectedKeys(['5-3']);
     } else {
       setSelectedKeys(['1']);
       // 修改为默认路由
@@ -152,7 +160,8 @@ export default () => {
                       selectedKeys[0] === '4-1' ? (<AgreementComponent />) :
                         selectedKeys[0] === '5-1' ? (<SecurityLogComponent />) :
                           selectedKeys[0] === '5-2' ? (<LogComponent />) :
-                            <Result status="404" title="404" subTitle="抱歉，您访问的页面不存在。" />}
+                            selectedKeys[0] === '5-3' ? (<BlackListComponent />) :
+                              <Result status="404" title="404" subTitle="抱歉，您访问的页面不存在。" />}
             </Content>
           </Layout>
         </Layout>

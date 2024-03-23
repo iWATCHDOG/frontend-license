@@ -5,7 +5,7 @@ import Title from 'antd/es/typography/Title';
 import { Button, Divider, message, Modal, Space, Typography } from 'antd';
 import { deleteUser, getOAuthInfo, unBindOAuth } from '@/services/userService';
 import { stringify } from 'querystring';
-import { BilibiliOutlined, createFromIconfontCN, GithubOutlined, QqOutlined } from '@ant-design/icons';
+import { BilibiliOutlined, createFromIconfontCN, GithubOutlined, QqOutlined, WechatOutlined } from '@ant-design/icons';
 import { ProList } from '@ant-design/pro-components';
 import { BASE_URL } from '@/constants';
 
@@ -13,6 +13,7 @@ const { Text, Link } = Typography;
 
 const AccountComponent: React.FC = () => {
   type OAuthDataItem = (typeof defaultOAuthData)[number];
+  const [wechatInfo, setWechatInfo] = useState<string | undefined>(undefined);
   const [qqInfo, setQqInfo] = useState<string | undefined>(undefined);
   const [githubInfo, setGithubInfo] = useState<string | undefined>(undefined);
   const [giteeInfo, setGiteeInfo] = useState<string | undefined>(undefined);
@@ -24,6 +25,12 @@ const AccountComponent: React.FC = () => {
     scriptUrl: '//at.alicdn.com/t/c/font_4443134_jcggo4h6b6r.js',
   });
   const defaultOAuthData = [
+    {
+      id: 1,
+      name: '微信',
+      image: <WechatOutlined />,
+      desc: wechatInfo ?? 'Loading...',
+    },
     {
       id: 2,
       name: 'QQ',
@@ -103,7 +110,15 @@ const AccountComponent: React.FC = () => {
     for (const item of defaultOAuthData) {
       try {
         const ret = await getOAuthInfo(item.id);
-        if (item.id === 2) {
+        if (ret.code === 1) {
+          if (ret.data) {
+            item.desc = ret.data;
+            setWechatInfo(ret.data);
+          } else {
+            item.desc = '未绑定';
+            setWechatInfo('未绑定');
+          }
+        } else if (item.id === 2) {
           if (ret.data) {
             item.desc = ret.data;
             setQqInfo(ret.data);
@@ -146,7 +161,9 @@ const AccountComponent: React.FC = () => {
         }
       } catch (e: any) {
         item.desc = '未绑定';
-        if (item.id === 2) {
+        if (item.id === 1) {
+          setWechatInfo('未绑定');
+        } else if (item.id === 2) {
           setQqInfo('未绑定');
         } else if (item.id === 3) {
           setGithubInfo('未绑定');

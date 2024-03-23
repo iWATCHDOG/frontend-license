@@ -1,34 +1,19 @@
 import React, { useRef } from 'react';
-import { Button, Space } from 'antd';
+import { Helmet, useModel } from '@@/exports';
 import { ActionType, ProList } from '@ant-design/pro-components';
-import { getSecurityLogs } from '@/services/userService';
-import SecurityLogTag from '@/components/SecurityLogTag';
+import { Button, message, Popconfirm, Space } from 'antd';
+import { deleteBlacklist, getBlackList } from '@/services/adminService';
 import TimeShow from '@/components/TimeShow';
-import { Helmet } from '@@/exports';
-import { formatString } from '@/utils/stringUtils';
-import SecurityLogAvatar from '@/components/SecurityLogAvatar';
 
-const SecurityLogComponent: React.FC = () => {
+const BlackListComponent: React.FC = () => {
   const actionRef = useRef<ActionType>();
-  const convertStringToList = (s: string | undefined) => {
-    // 已知s的例子是[301]或[301,302] 或者可能是undefined
-    if (!s) {
-      return [];
-    }
-    const arr = s.split(',');
-    const res: number[] = [];
-    for (let i = 0; i < arr.length; i++) {
-      const n = parseInt(arr[i].replace('[', '').replace(']', ''));
-      res.push(n);
-    }
-    return res;
-  };
+  const { initialState } = useModel('@@initialState');
 
   return (<>
     <Helmet>
-      <title>安全日志 - 管理后台</title>
+      <title>黑名单 - 设置</title>
     </Helmet>
-    <ProList<UserType.SecurityLogVO>
+    <ProList<RootType.Blacklist>
       actionRef={actionRef}
       rowKey="id"
       pagination={{
@@ -53,13 +38,13 @@ const SecurityLogComponent: React.FC = () => {
       split={true}
       showActions="hover"
       request={async (params) => {
-        const searchParams: UserType.UserSecurityLogQueryRequest = {
+        const searchParams: AdminType.BlacklistQueryRequest = {
           ...params,
         };
         const {
           data,
           code,
-        } = await getSecurityLogs(searchParams);
+        } = await getBlackList(searchParams);
         const d = data?.records || [];
         return {
           data: d,
@@ -77,18 +62,9 @@ const SecurityLogComponent: React.FC = () => {
                 <span style={{
                   color: '#477fef',
                 }}>
-                  {row.title ?? '未知'}
+                  {row.ip}
                 </span>
               </Space>
-            );
-          },
-        },
-        avatar: {
-          dataIndex: 'avatar',
-          search: false,
-          render: (_, row) => {
-            return (
-              <SecurityLogAvatar row={row} />
             );
           },
         },
@@ -98,37 +74,48 @@ const SecurityLogComponent: React.FC = () => {
           render: (_, row) => {
             return (
               <Space size={0} direction={'vertical'}>
-                {row.info && <Space>
-                  <span>{formatString(row.info)}</span>
-                </Space>}
                 <Space>
-                  <span>{row?.uid}</span>
+                  <span>{row.log}</span>
                   <span>|</span>
-                  <span>{row?.ip}</span>
+                  <span>{row.reason}</span>
                   <span>|</span>
                   <span><TimeShow date={new Date(row?.updateTime as any as number)} /></span>
-                  <span>|</span>
-                  <span>{row?.id}</span>
                 </Space>
               </Space>
             );
           },
         },
-        subTitle: {
-          dataIndex: 'uid',
-          title: 'UID',
+        actions: {
           render: (_, row) => {
-            return (
-              <Space size={0}>
-                {convertStringToList(row?.types).map((data: number) => <>
-                  <SecurityLogTag data={data} />
-                </>)}
+            return (<>
+              <Space>
+                <Popconfirm
+                  title="您确定要删除吗？"
+                  onConfirm={async () => {
+                    const hide = message.loading('处理中');
+                    try {
+                      await deleteBlacklist(row.id as number);
+                      message.success('删除成功!');
+                      actionRef.current?.reload();
+                    } catch (e: any) {
+                      message.error(e.message);
+                    } finally {
+                      hide();
+                    }
+                  }}
+                  okText="确认"
+                  cancelText="取消"
+                >
+                  <Button size={'small'} type="primary" danger ghost>
+                    删除
+                  </Button>
+                </Popconfirm>
               </Space>
-            );
+            </>);
           },
         },
       }}
     />
   </>);
 };
-export default SecurityLogComponent;
+export default BlackListComponent;

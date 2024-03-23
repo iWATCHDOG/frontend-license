@@ -19,4 +19,13 @@ declare namespace RootType {
     bizState?: string;
     randstr: string;
   }
+
+  interface Blacklist {
+    id: number;
+    ip: string;
+    log: number;
+    reason: string;
+    createTime: Date;
+    updateTime: Date;
+  }
 }

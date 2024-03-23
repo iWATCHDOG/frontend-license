@@ -30,11 +30,11 @@ const SecurityLogComponent: React.FC = () => {
     <Helmet>
       <title>安全日志 - 档案</title>
     </Helmet>
-    <ProList<UserType.SecurityLog>
+    <ProList<UserType.SecurityLogVO>
       actionRef={actionRef}
       rowKey="id"
       pagination={{
-        pageSize: 10,
+        showSizeChanger: true,
       }}
       toolBarRender={() => [
         <Button
@@ -120,7 +120,7 @@ const SecurityLogComponent: React.FC = () => {
           render: (_, row) => {
             return (
               <Space size={0}>
-                {convertStringToList(row?.types).map((data: number, index: number) => <>
+                {convertStringToList(row?.types).map((data: number) => <>
                   <SecurityLogTag data={data} />
                 </>)}
               </Space>

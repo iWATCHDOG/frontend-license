@@ -1,5 +1,9 @@
 // @ts-ignore
 import humanizeDuration from 'humanize-duration';
+import { getUsername } from '@/services/userService';
+
+// 初始化map，存uid对应的用户名
+const uidNameMap = new Map<number, string>();
 
 // 格式化带有格式的字符串
 export const formatString = (str: string): string => {
@@ -18,10 +22,28 @@ export const formatString = (str: string): string => {
     });
   }
 
+  function replaceUidName(str: string): string {
+    return str.replace(/{uid:(\d+)}/g, (match, key) => {
+      // eslint-disable-next-line @typescript-eslint/no-use-before-define
+      initUidNameMap(parseInt(key, 10));
+      // eslint-disable-next-line @typescript-eslint/no-use-before-define
+      return uidNameMap.get(parseInt(key, 10)) || key;
+    });
+  }
+
+  async function initUidNameMap(uid: number) {
+    if (!uidNameMap.has(uid)) {
+      // eslint-disable-next-line @typescript-eslint/no-use-before-define
+      const ret = await getUsername(uid);
+      uidNameMap.set(uid, ret.data);
+    }
+  }
+
   function recursiveReplace(str: string): string {
     // 先替换日期和权限
     let result = replaceDate(str);
     result = replacePermission(result);
+    result = replaceUidName(result);
 
     // 检查是否还有需要替换的部分，特别是嵌套部分
     let oldNewMatch = /{old:(.*?),new:(.*?)}/.exec(result);

@@ -128,12 +128,35 @@ export async function updatePermission(params: AdminType.PermissionUpdateRequest
   });
 }
 
-export async function addBlacklist(id: number) {
-  return request<BaseResponse<any>>(`/admin/blacklist/` + id, {
+export async function addBlacklist(params: AdminType.AddBlacklistRequest) {
+  return request<BaseResponse<any>>(`/admin/blacklist`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
       'time': new Date().getTime(),
     },
+    params: params,
+  });
+}
+
+export async function deleteBlacklist(id: number) {
+  return request<BaseResponse<any>>(`/admin/blacklist/` + id, {
+    method: 'DELETE',
+    headers: {
+      'Content-Type': 'application/json',
+      'time': new Date().getTime(),
+    },
+  });
+}
+
+
+export async function getBlackList(params: AdminType.LogQueryRequest) {
+  return request<BaseResponse<PageInfo<RootType.Blacklist[]>>>('/admin/blacklist/list', {
+    method: 'GET',
+    headers: {
+      'Content-Type': 'application/json',
+      'time': new Date().getTime(),
+    },
+    params: params,
   });
 }

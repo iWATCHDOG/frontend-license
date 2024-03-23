@@ -1,6 +1,6 @@
 import React, { useRef, useState } from 'react';
 import { Helmet, useModel } from '@@/exports';
-import { Avatar, Divider, message, Popconfirm, Space, Typography } from 'antd';
+import { Avatar, Button, Divider, message, Popconfirm, Space, Typography } from 'antd';
 import { ActionType, ProColumns, ProTable } from '@ant-design/pro-components';
 import { deletePermission, getPermissions } from '@/services/adminService';
 import { BASE_URL } from '@/constants';
@@ -76,14 +76,18 @@ const PermissionComponent: React.FC = () => {
     valueType: 'option',
     render: (_, record) => (
       <Space split={<Divider type="vertical" />}>
-        <Typography.Link
-          onClick={() => {
-            setPermission(record);
-            setUpdateModalVisible(true);
-          }}
+        <Button size={'small'}
+                type="primary"
+                ghost
+                onClick={() => {
+                  setPermission(record);
+                  setUpdateModalVisible(true);
+                }}
         >
           编辑
-        </Typography.Link>
+        </Button>
+
+
         <Popconfirm
           title="您确定要删除么？"
           onConfirm={async () => {
@@ -101,7 +105,9 @@ const PermissionComponent: React.FC = () => {
           okText="确认"
           cancelText="取消"
         >
-          <Typography.Link type="danger">删除</Typography.Link>
+          <Button size={'small'} type="primary" danger ghost>
+            删除
+          </Button>
         </Popconfirm>
       </Space>
     ),

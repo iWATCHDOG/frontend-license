@@ -1,7 +1,7 @@
 import React, { useRef } from 'react';
 import { Helmet, useModel } from '@@/exports';
 import { ActionType, ProColumns, ProTable } from '@ant-design/pro-components';
-import { Avatar, Badge, Button, Divider, message, Popconfirm, Space, Typography } from 'antd';
+import { Avatar, Badge, Button, Divider, message, Popconfirm, Space } from 'antd';
 import { deleteUser, getUsers } from '@/services/adminService';
 import { BASE_URL } from '@/constants';
 
@@ -67,12 +67,14 @@ const UserComponent: React.FC = () => {
     valueType: 'option',
     render: (_, record) => (
       <Space split={<Divider type="vertical" />}>
-        <Typography.Link
-          onClick={() => {
-          }}
+        <Button size={'small'}
+                type="primary"
+                ghost
+                onClick={() => {
+                }}
         >
           编辑
-        </Typography.Link>
+        </Button>
         <Popconfirm
           title="您确定要删除么？"
           onConfirm={async () => {
@@ -91,7 +93,9 @@ const UserComponent: React.FC = () => {
           okText="确认"
           cancelText="取消"
         >
-          <Typography.Link type="danger">删除</Typography.Link>
+          <Button size={'small'} type="primary" danger ghost>
+            删除
+          </Button>
         </Popconfirm>
       </Space>
     ),

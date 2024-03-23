@@ -6,6 +6,7 @@ import {
   LockOutlined,
   QqOutlined,
   UserOutlined,
+  WechatOutlined,
 } from '@ant-design/icons';
 import { LoginForm, ProFormInstance, ProFormText } from '@ant-design/pro-components';
 import { useModel } from '@umijs/max';
@@ -114,6 +115,9 @@ export default () => {
         actions={
           <Space>
             其他登录方式
+            <a href={BASE_URL + '/oauth/wechat'} style={{ color: 'inherit' }}>
+              <WechatOutlined style={iconStyles} />
+            </a>
             <a href={BASE_URL + '/oauth/qq'} style={{ color: 'inherit' }}>
               <QqOutlined style={iconStyles} />
             </a>

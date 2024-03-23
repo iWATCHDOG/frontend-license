@@ -69,4 +69,16 @@ declare namespace AdminType {
     permission: string;
     expiry: number;
   }
+
+  interface AddBlacklistRequest {
+    log: number;
+    reason: string;
+  }
+
+  interface BlacklistQueryRequest extends PageRequest {
+    id?: number;
+    ip?: string;
+    createTime?: Date;
+    updateTime?: Date;
+  }
 }

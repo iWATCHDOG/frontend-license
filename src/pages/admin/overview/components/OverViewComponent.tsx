@@ -4,22 +4,26 @@ import Title from 'antd/es/typography/Title';
 import CountUp from 'react-countup';
 import { Button, Card, Col, Divider, Row, Statistic } from 'antd';
 import { countBlacklist, countLog, countSecurityLog, countUser } from '@/services/adminService';
+import {
+  getBlacklistCount,
+  getLogCount,
+  getSecurityCount,
+  getUserCount,
+  setBlacklistCount,
+  setLogCount,
+  setSecurityCount,
+  setUserCount,
+} from '@/utils/globalUtils';
 
 const OverViewComponent: React.FC = () => {
   const { initialState } = useModel('@@initialState');
   const loginUser = initialState?.loginUser;
-  const [userCount, setUserCount] = useState<number>(0);
-  const [logCount, setLogCount] = useState<number>(0);
-  const [securityCount, setSecurityCount] = useState<number>(0);
-  const [blacklistCount, setBlacklistCount] = useState<number>(0);
   const [refreshingCount, setRefreshingCount] = useState<boolean>(false);
-  const [first, setFirst] = useState<boolean>(true);
-  const [inited, setInited] = useState<boolean>(false);
 
   const formatter = (value: any) => {
-    let start = value;
-    if (first) {
-      start = 0;
+    let start = 0;
+    if (value > 1000) {
+      start = value - 500;
     }
     return <CountUp start={start} end={value} separator="," />;
   };
@@ -47,20 +51,8 @@ const OverViewComponent: React.FC = () => {
     }
   };
 
-  const doInit = async () => {
-    setFirst(true);
-    await init();
-    setFirst(false);
-    /*setInterval(async () => {
-      await init();
-    }, 10000);*/
-    setInited(true);
-  };
-
   useEffect(() => {
-    if (!inited) {
-      doInit();
-    }
+    init();
   }, []);
   return (<>
     <Helmet>
@@ -89,22 +81,22 @@ const OverViewComponent: React.FC = () => {
     <Row gutter={16}>
       <Col span={6}>
         <Card bordered={false}>
-          <Statistic title="活跃用户数" value={userCount} formatter={formatter} />
+          <Statistic title="活跃用户数" value={getUserCount()} formatter={formatter} />
         </Card>
       </Col>
       <Col span={6}>
         <Card bordered={false}>
-          <Statistic title="请求数" value={logCount} formatter={formatter} />
+          <Statistic title="请求数" value={getLogCount()} formatter={formatter} />
         </Card>
       </Col>
       <Col span={6}>
         <Card bordered={false}>
-          <Statistic title="安全日志数" value={securityCount} formatter={formatter} />
+          <Statistic title="安全日志数" value={getSecurityCount()} formatter={formatter} />
         </Card>
       </Col>
       <Col span={6}>
         <Card bordered={false}>
-          <Statistic title="黑名单数" value={blacklistCount} formatter={formatter} />
+          <Statistic title="黑名单数" value={getBlacklistCount()} formatter={formatter} />
         </Card>
       </Col>
     </Row>

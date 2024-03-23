@@ -16,7 +16,9 @@ enum SecurityType {
   ADMIN_OPERATION = 500,
   ADD_PERMISSION = 600,
   REMOVE_PERMISSION = 601,
-  UPDATE_PERMISSION = 602
+  UPDATE_PERMISSION = 602,
+  ADD_BLACKLIST = 700,
+  REMOVE_BLACKLIST = 701,
 }
 
 const getSecurityTypeColor = (type: SecurityType) => {
@@ -36,6 +38,8 @@ const getSecurityTypeColor = (type: SecurityType) => {
     [SecurityType.ADD_PERMISSION]: 'gold',
     [SecurityType.REMOVE_PERMISSION]: 'lime',
     [SecurityType.UPDATE_PERMISSION]: 'yellow',
+    [SecurityType.ADD_BLACKLIST]: 'orange',
+    [SecurityType.REMOVE_BLACKLIST]: 'cyan',
   };
   return colors[type] ?? 'red';
 };
@@ -57,6 +61,8 @@ const getSecurityTypeDescription = (type: SecurityType) => {
     [SecurityType.ADD_PERMISSION]: '添加权限',
     [SecurityType.REMOVE_PERMISSION]: '移除权限',
     [SecurityType.UPDATE_PERMISSION]: '更新权限',
+    [SecurityType.ADD_BLACKLIST]: '添加黑名单',
+    [SecurityType.REMOVE_BLACKLIST]: '移除黑名单',
   };
   return descriptions[type];
 };

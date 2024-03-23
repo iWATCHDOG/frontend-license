@@ -45,6 +45,7 @@ const PermissionAddComponent: React.FC = () => {
       2: { text: <><WomanOutlined /> 女</> },
       3: { text: <><QuestionCircleOutlined /> 保密</> },
     },
+    hidden: true,
   }, {
     title: '状态',
     dataIndex: 'status',
