@@ -4,6 +4,7 @@ import { ActionType, ProList } from '@ant-design/pro-components';
 import { Button, message, Popconfirm, Space } from 'antd';
 import { deleteBlacklist, getBlackList } from '@/services/adminService';
 import TimeShow from '@/components/TimeShow';
+import { BASE_URL } from '@/constants';
 
 const BlackListComponent: React.FC = () => {
   const actionRef = useRef<ActionType>();
@@ -29,6 +30,9 @@ const BlackListComponent: React.FC = () => {
         >
           刷新
         </Button>,
+        <a key="1" href={BASE_URL + '/admin/download/blacklist'} target={'_blank'} rel="noreferrer">
+          <Button key={2}>导出</Button>
+        </a>,
       ]}
       dateFormatter="string"
       search={{

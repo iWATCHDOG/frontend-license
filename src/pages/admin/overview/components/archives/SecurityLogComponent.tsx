@@ -7,6 +7,7 @@ import TimeShow from '@/components/TimeShow';
 import { Helmet } from '@@/exports';
 import { formatString } from '@/utils/stringUtils';
 import SecurityLogAvatar from '@/components/SecurityLogAvatar';
+import { BASE_URL } from '@/constants';
 
 const SecurityLogComponent: React.FC = () => {
   const actionRef = useRef<ActionType>();
@@ -44,6 +45,9 @@ const SecurityLogComponent: React.FC = () => {
         >
           刷新
         </Button>,
+        <a key="1" href={BASE_URL + '/admin/download/security-log'} target={'_blank'} rel="noreferrer">
+          <Button key={2}>导出</Button>
+        </a>,
       ]}
       dateFormatter="string"
       search={{

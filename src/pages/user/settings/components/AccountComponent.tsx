@@ -2,14 +2,12 @@ import React, { useEffect, useState } from 'react';
 import { useModel } from '@umijs/max';
 import { Helmet, history } from '@@/exports';
 import Title from 'antd/es/typography/Title';
-import { Button, Divider, message, Modal, Space, Typography } from 'antd';
+import { Button, Divider, message, Modal, Space } from 'antd';
 import { deleteUser, getOAuthInfo, unBindOAuth } from '@/services/userService';
 import { stringify } from 'querystring';
 import { BilibiliOutlined, createFromIconfontCN, GithubOutlined, QqOutlined, WechatOutlined } from '@ant-design/icons';
 import { ProList } from '@ant-design/pro-components';
 import { BASE_URL } from '@/constants';
-
-const { Text, Link } = Typography;
 
 const AccountComponent: React.FC = () => {
   type OAuthDataItem = (typeof defaultOAuthData)[number];
@@ -66,8 +64,6 @@ const AccountComponent: React.FC = () => {
     // desc 为 undefined 或 Loading... 或 未绑定 为未绑定
     return item.desc !== undefined && item.desc !== 'Loading...' && item.desc !== '未绑定';
   };
-
-  const loginUser = initialState?.loginUser;
   const onDeleteClick = () => {
     Modal.confirm({
       title: '确认注销',
@@ -249,7 +245,10 @@ const AccountComponent: React.FC = () => {
                   const hide = message.loading('跳转中');
                   localStorage.setItem('refreshing', 'refreshing');
                   localStorage.setItem('redirect', window.location.href);
-                  if (row.id === 2) {
+                  if (row.id === 1) {
+                    // WeChat
+                    window.location.href = BASE_URL + '/oauth/wechat';
+                  } else if (row.id === 2) {
                     // QQ
                     window.location.href = BASE_URL + '/oauth/qq';
                   } else if (row.id === 3) {

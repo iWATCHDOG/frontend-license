@@ -1,14 +1,13 @@
 import React, { useRef } from 'react';
 import Title from 'antd/es/typography/Title';
 import { Button, Divider, message } from 'antd';
-import { Helmet, history, useModel } from '@@/exports';
+import { Helmet, history, Link, useModel } from '@@/exports';
 import { ProForm, ProFormInstance, ProFormText } from '@ant-design/pro-components';
 import { updateUserPassword } from '@/services/userService';
 import { stringify } from 'querystring';
 
 const SecurityComponent: React.FC = () => {
   const { initialState, setInitialState } = useModel('@@initialState');
-  const loginUser = initialState?.loginUser;
   const formRef = useRef<ProFormInstance>();
 
   const doUpdate = async () => {
@@ -75,6 +74,15 @@ const SecurityComponent: React.FC = () => {
           size: 'large',
         }}
         width="xl"
+        addonAfter={
+          <Link
+            to="/user/forget"
+            style={{
+              float: 'right',
+            }}
+          >
+            忘记密码
+          </Link>}
         label={'旧密码'}
         placeholder={'请输入旧密码'}
         rules={[{

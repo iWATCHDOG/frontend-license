@@ -5,6 +5,7 @@ import { Button, message, Popconfirm, Space, Tag } from 'antd';
 import { addBlacklist, getLogByRequestID, getLogs } from '@/services/adminService';
 import LogDrawer from '@/pages/admin/overview/components/archives/components/LogDrawer';
 import TimeShow from '@/components/TimeShow';
+import { BASE_URL } from '@/constants';
 
 const LogComponent: React.FC = () => {
   const { initialState } = useModel('@@initialState');
@@ -58,6 +59,9 @@ const LogComponent: React.FC = () => {
         >
           刷新
         </Button>,
+        <a key="1" href={BASE_URL + '/admin/download/log'} target={'_blank'} rel="noreferrer">
+          <Button key={2}>导出</Button>
+        </a>,
       ]}
       dateFormatter="string"
       search={{

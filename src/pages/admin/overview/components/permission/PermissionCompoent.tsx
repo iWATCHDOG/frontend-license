@@ -127,6 +127,11 @@ const PermissionComponent: React.FC = () => {
       search={{
         labelWidth: 'auto',
       }}
+      toolBarRender={() => [
+        <a key="1" href={BASE_URL + '/admin/download/permission'} target={'_blank'} rel="noreferrer">
+          <Button key={2}>导出</Button>
+        </a>,
+      ]}
       request={async (params, sorter, filter) => {
         const searchParams: AdminType.PermissionQueryRequest = {
           ...params,
