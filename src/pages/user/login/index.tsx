@@ -92,7 +92,7 @@ export default () => {
       setShow(false);
       message.error('您已经登录，即将跳转到首页');
       setTimeout(() => {
-        window.location.href = '/';
+        window.location.href = searchParams.get('redirect') ?? '/';
       }, 1000);
     } else {
       setShow(true);

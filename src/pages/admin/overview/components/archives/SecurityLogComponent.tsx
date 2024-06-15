@@ -45,7 +45,7 @@ const SecurityLogComponent: React.FC = () => {
         >
           刷新
         </Button>,
-        <a key="1" href={BASE_URL + '/admin/download/security-log'} target={'_blank'} rel="noreferrer">
+        <a key="1" href={BASE_URL + '/admin/download/security'} target={'_blank'} rel="noreferrer">
           <Button key={2}>导出</Button>
         </a>,
       ]}
@@ -81,7 +81,7 @@ const SecurityLogComponent: React.FC = () => {
                 <span style={{
                   color: '#477fef',
                 }}>
-                  {row.title ?? '未知'}
+                  {formatString(row.title ?? '未知')}
                 </span>
               </Space>
             );

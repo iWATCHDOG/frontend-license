@@ -8,6 +8,7 @@ import RightContent from '@/components/GlobalHeader/RightContent';
 import { InitialState } from '@/global';
 import { setPingNumber } from '@/utils/globalUtils';
 import { getPing } from '@/services/rootService';
+import { message } from 'antd';
 
 
 function getCookie(name: string) {
@@ -103,13 +104,15 @@ export const request: RequestConfig = {
     // 获取requestId
     const requestId = data.requestInfo.requestId;
     const code = data.code ?? 50000;
-    // 未登录，且不为获取用户登录信息接口
-    if (code === 40100 && !path.includes('user/get/login') && !location.pathname.includes('/user/login')) {
-      throw new Error(`${data.message} 请求ID: ${requestId}`);
+    if (code === 40100) {
+      // throw new Error(`${data.message} id: ${requestId}`);
+      message.error(`${data.message} id: ${requestId}`);
     }
     if (code !== 20000) {
-      throw new Error(`${data.message} 请求ID: ${requestId}`);
+      const additionalInfo = data.data ? ` data: ${data.data}` : '';
+      message.error(`${data.message}${additionalInfo} id: ${requestId}`);
     }
+    // 未登录，且不为获取用户登录信息接口
     /*if (code !== 0) {
       console.error(`request error, path = ${path}`, data);
       throw new Error(data.message ?? '服务器错误');

@@ -34,7 +34,6 @@ declare namespace AdminType {
     updateTime?: Date;
   }
 
-
   interface UserQueryRequest extends PageRequest {
     uid?: number;
     username?: string;
@@ -73,6 +72,11 @@ declare namespace AdminType {
   interface AddBlacklistRequest {
     log: number;
     reason: string;
+  }
+
+  interface ChartRequest {
+    type: string;
+    days: number;
   }
 
   interface BlacklistQueryRequest extends PageRequest {

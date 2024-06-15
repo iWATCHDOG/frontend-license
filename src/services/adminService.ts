@@ -160,3 +160,14 @@ export async function getBlackList(params: AdminType.LogQueryRequest) {
     params: params,
   });
 }
+
+export async function getChartData(params: AdminType.ChartRequest) {
+  return request<BaseResponse<any>>('/admin/chart', {
+    method: 'GET',
+    headers: {
+      'Content-Type': 'application/json',
+      'time': new Date().getTime(),
+    },
+    params: params,
+  });
+}

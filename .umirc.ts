@@ -3,16 +3,6 @@ import routes from './src/configs/routes';
 
 export default defineConfig({
   antd: {
-    // configProvider
-    configProvider: {},
-    dark: false,
-    // less or css, default less
-    style: 'less',
-    // shortcut of `configProvider.theme`
-    // use to configure theme token, antd v5 only
-    theme: {},
-    // antd <App /> valid for version 5.1.0 or higher, default: undefined
-    appConfig: {},
     // Add StyleProvider for legacy browsers
     styleProvider: {
       hashPriority: 'high',
@@ -27,6 +17,14 @@ export default defineConfig({
     title: '@umijs/max',
   },
   routes,
+  /*proxy: {
+    '/api': {
+      'target': 'https://backend.floracore.cc/',
+      'changeOrigin': true,
+      'pathRewrite': { '^/api': '' },
+    },
+  },*/
+  fastRefresh: true,
   npmClient: 'pnpm',
   headScripts: [
     { src: 'https://turing.captcha.qcloud.com/TCaptcha.js' },

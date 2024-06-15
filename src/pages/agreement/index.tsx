@@ -1,7 +1,9 @@
-export default () => {
+const Agreement = () => {
   return (
     <div>
-      <h1>用户协议</h1>
+      <h1>...</h1>
     </div>
   );
 };
+
+export default Agreement;
