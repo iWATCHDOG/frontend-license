@@ -34,6 +34,7 @@ declare namespace UserType {
 
   interface OAuthInfo {
     type: number;
+    enable: boolean;
     openId?: string;
   }
 

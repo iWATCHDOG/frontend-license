@@ -9,7 +9,7 @@ import { history, useNavigate } from 'umi';
 import styles from './index.less';
 import { BASE_URL } from '@/constants';
 import { getNotifyList } from '@/services/rootService';
-import { PoweroffOutlined, SettingOutlined } from '@ant-design/icons';
+import { PoweroffOutlined, SettingOutlined, UserOutlined } from '@ant-design/icons';
 
 const { Text } = Typography;
 
@@ -82,6 +82,13 @@ const AvatarDropdown: React.FC = () => {
     key: 'current',
     label: loginUser.username ?? 'null',
     disabled: true,
+  }, {
+    key: 'profile',
+    label: <>
+      <UserOutlined /> 个人资料
+    </>,
+  }, {
+    type: 'divider',
   }, {
     key: 'settings',
     label: <>

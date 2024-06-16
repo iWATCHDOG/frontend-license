@@ -1,13 +1,18 @@
 import { useModel, useParams } from '@@/exports';
 import React, { useEffect, useState } from 'react';
 import {
+  BarsOutlined,
   ContainerOutlined,
   ExceptionOutlined,
   FireOutlined,
   FormOutlined,
   HomeOutlined,
+  KeyOutlined,
+  OrderedListOutlined,
+  PicCenterOutlined,
   PlusSquareOutlined,
   SecurityScanOutlined,
+  ShareAltOutlined,
   UserOutlined,
 } from '@ant-design/icons';
 import { Layout, Menu, MenuProps, Result } from 'antd';
@@ -35,10 +40,30 @@ export default () => {
     label: '概览',
     icon: <HomeOutlined />,
   }, {
-    type: 'user',
+    type: 'group',
     key: '2',
-    label: '用户管理',
-    icon: <UserOutlined />,
+    label: '用户',
+    children: [{
+      type: 'user',
+      key: '2-1',
+      label: '用户管理',
+      icon: <UserOutlined />,
+    }, {
+      type: 'invite',
+      key: '2-2',
+      label: '邀请码管理',
+      icon: <ShareAltOutlined />,
+    }, {
+      type: 'invite/log',
+      key: '2-3',
+      label: '邀请码日志',
+      icon: <BarsOutlined />,
+    }, {
+      type: '2fa',
+      key: '2-4',
+      label: '两步验证',
+      icon: <KeyOutlined />,
+    }],
   }, {
     type: 'group',
     key: '3',
@@ -63,6 +88,11 @@ export default () => {
       key: '4-1',
       label: '用户协议',
       icon: <FormOutlined />,
+    }, {
+      type: 'home',
+      key: '4-2',
+      label: '主页设置',
+      icon: <PicCenterOutlined />,
     }],
   }, {
     type: 'group',
@@ -83,6 +113,16 @@ export default () => {
       key: '5-3',
       label: '黑名单',
       icon: <FireOutlined />,
+    }],
+  }, {
+    type: 'group',
+    key: '6',
+    label: '订单管理',
+    children: [{
+      type: 'order',
+      key: '6-1',
+      label: '订单列表',
+      icon: <OrderedListOutlined />,
     }],
   }];
 
@@ -114,7 +154,15 @@ export default () => {
     if (type === 'overview') {
       setSelectedKeys(['1']);
     } else if (type === 'user') {
-      setSelectedKeys(['2']);
+      setSelectedKeys(['2-1']);
+    } else if (type === 'invite') {
+      if (type2 === 'log') {
+        setSelectedKeys(['2-3']);
+      } else {
+        setSelectedKeys(['2-2']);
+      }
+    } else if (type === '2fa') {
+      setSelectedKeys(['2-4']);
     } else if (type === 'permission') {
       if (type2 === 'overview') {
         setSelectedKeys(['3-1']);
@@ -125,12 +173,16 @@ export default () => {
       }
     } else if (type === 'agreement') {
       setSelectedKeys(['4-1']);
+    } else if (type === 'home') {
+      setSelectedKeys(['4-2']);
     } else if (type === 'security-log') {
       setSelectedKeys(['5-1']);
     } else if (type === 'log') {
       setSelectedKeys(['5-2']);
     } else if (type === 'blacklist') {
       setSelectedKeys(['5-3']);
+    } else if (type === 'order') {
+      setSelectedKeys(['6-1']);
     } else {
       setSelectedKeys(['1']);
       // 修改为默认路由
@@ -154,7 +206,7 @@ export default () => {
           <Layout style={{ padding: '24px' }}>
             <Content style={{ margin: '24px 16px 0' }}>
               {selectedKeys[0] === '1' ? (<OverViewComponent />) :
-                selectedKeys[0] === '2' ? (<UserComponent />) :
+                selectedKeys[0] === '2-1' ? (<UserComponent />) :
                   selectedKeys[0] === '3-1' ? (<PermissionComponent />) :
                     selectedKeys[0] === '3-2' ? (<PermissionAddComponent />) :
                       selectedKeys[0] === '4-1' ? (<AgreementComponent />) :

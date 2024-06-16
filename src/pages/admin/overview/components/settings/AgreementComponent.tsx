@@ -1,6 +1,6 @@
 import React from 'react';
 import { Helmet, useModel } from '@@/exports';
-import { Button, Form, InputNumber, Select, Space, Typography } from 'antd';
+import { Button, Form, InputNumber, Select, Typography } from 'antd';
 
 const { Text, Link } = Typography;
 

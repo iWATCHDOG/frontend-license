@@ -107,10 +107,11 @@ export const request: RequestConfig = {
       throw new Error(`${data.message} id: ${requestId}`);
       // message.error(`${data.message} id: ${requestId}`);
     }
-    /*if (code !== 20000) {
-      const additionalInfo = data.data ? ` data: ${data.data}` : '';
-      message.error(`${data.message}${additionalInfo} id: ${requestId}`);
-    }*/
+    if (code !== 20000) {
+      throw new Error(`${data.message} id: ${requestId}`);
+      /*const additionalInfo = data.data ? ` data: ${data.data}` : '';
+      message.error(`${data.message}${additionalInfo} id: ${requestId}`);*/
+    }
     // 未登录，且不为获取用户登录信息接口
     /*if (code !== 0) {
       console.error(`request error, path = ${path}`, data);

@@ -63,6 +63,15 @@ const SecurityComponent: React.FC = () => {
             <Button type="primary" htmlType="button" onClick={doUpdate} key="update">
               更新密码
             </Button>,
+            <Link
+              key="forget"
+              to="/user/forget"
+              style={{
+                float: 'right',
+              }}
+            >
+              忘记密码
+            </Link>,
           ];
         },
       }}
@@ -74,15 +83,6 @@ const SecurityComponent: React.FC = () => {
           size: 'large',
         }}
         width="xl"
-        addonAfter={
-          <Link
-            to="/user/forget"
-            style={{
-              float: 'right',
-            }}
-          >
-            忘记密码
-          </Link>}
         label={'旧密码'}
         placeholder={'请输入旧密码'}
         rules={[{
@@ -90,6 +90,7 @@ const SecurityComponent: React.FC = () => {
           message: '请输入旧密码！',
         }]}
       />
+
       <ProFormText.Password
         name="newPassword"
         fieldProps={{

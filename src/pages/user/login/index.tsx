@@ -18,6 +18,7 @@ import { BASE_URL, DEFAULT_NAME, TENCENT_CAPTCHA_APP_ID } from '@/constants';
 import { Link } from '@@/exports';
 
 import type { CheckboxChangeEvent } from 'antd/es/checkbox';
+import { getEnableOAuthList } from '@/services/rootService';
 
 /**
  * 用户登录页面
@@ -27,6 +28,7 @@ export default () => {
   const [checked, setChecked] = useState(false);
   const formRef = useRef<ProFormInstance>();
   const [show, setShow] = useState(false);
+  const [oAuthList, setOAuthList] = useState<number[]>([]);
 
   const onChange = (e: CheckboxChangeEvent) => {
     setChecked(e.target.checked);
@@ -86,6 +88,11 @@ export default () => {
     captcha1.show();
   };
 
+  const enableOAuthList = async () => {
+    const ret = await getEnableOAuthList();
+    setOAuthList(ret.data);
+  };
+
   useEffect(() => {
     // 判断是否已经登录
     if (initialState?.loginUser) {
@@ -95,6 +102,8 @@ export default () => {
         window.location.href = searchParams.get('redirect') ?? '/';
       }, 1000);
     } else {
+      // 获取启用的 OAuth 列表
+      enableOAuthList();
       setShow(true);
     }
   }, []);
@@ -113,27 +122,30 @@ export default () => {
         subTitle={DEFAULT_NAME}
         formRef={formRef}
         actions={
-          <Space>
-            其他登录方式
-            <a href={BASE_URL + '/oauth/wechat'} style={{ color: 'inherit' }}>
-              <WechatOutlined style={iconStyles} />
-            </a>
-            <a href={BASE_URL + '/oauth/qq'} style={{ color: 'inherit' }}>
-              <QqOutlined style={iconStyles} />
-            </a>
-            <a href={BASE_URL + '/oauth/github'} style={{ color: 'inherit' }}>
-              <GithubOutlined style={iconStyles} />
-            </a>
-            <a href={BASE_URL + '/oauth/gitee'} style={{ color: 'inherit' }}>
-              <IconFont style={iconStyles} type={'icon-gitee'} />
-            </a>
-            <a href={BASE_URL + '/oauth/microsoft'} style={{ color: 'inherit' }}>
-              <IconFont style={iconStyles} type={'icon-microsoft1'} />
-            </a>
-            <a href={BASE_URL + '/oauth/bilibili'} style={{ color: 'inherit' }}>
-              <BilibiliOutlined style={iconStyles} />
-            </a>
-          </Space>
+          <>
+            {Array.isArray(oAuthList) && oAuthList.length > 0 && (
+              <Space>
+                其他登录方式
+                {oAuthList.map((type) => (
+                  <>
+                    {type === 1 ? <a href={BASE_URL + '/oauth/wechat'} style={{ color: 'inherit' }}>
+                      <WechatOutlined style={iconStyles} />
+                    </a> : type === 2 ? <a href={BASE_URL + '/oauth/qq'} style={{ color: 'inherit' }}>
+                      <QqOutlined style={iconStyles} />
+                    </a> : type === 3 ? <a href={BASE_URL + '/oauth/github'} style={{ color: 'inherit' }}>
+                      <GithubOutlined style={iconStyles} />
+                    </a> : type === 5 ? <a href={BASE_URL + '/oauth/gitee'} style={{ color: 'inherit' }}>
+                      <IconFont style={iconStyles} type={'icon-gitee'} />
+                    </a> : type === 6 ? <a href={BASE_URL + '/oauth/microsoft'} style={{ color: 'inherit' }}>
+                      <IconFont style={iconStyles} type={'icon-microsoft1'} />
+                    </a> : type === 7 && <a href={BASE_URL + '/oauth/bilibili'} style={{ color: 'inherit' }}>
+                      <BilibiliOutlined style={iconStyles} />
+                    </a>}
+                  </>
+                ))}
+              </Space>
+            )}
+          </>
         }
         onFinish={async (formData) => {
           // 判断是否同意用户协议

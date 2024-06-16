@@ -159,16 +159,6 @@ const OverViewComponent: React.FC = () => {
       </div>
       <div style={{ textAlign: 'right' }}>
         <Space>
-          <Button
-            key="4"
-            size={'small'}
-            onClick={() => {
-              // @ts-ignore
-              ref.current?.downloadImage();
-            }}
-          >
-            导出
-          </Button>
           <Select
             defaultValue={7}
             style={{ width: 80 }}

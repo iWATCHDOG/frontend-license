@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useModel } from '@umijs/max';
 import { Helmet, history } from '@@/exports';
 import Title from 'antd/es/typography/Title';
-import { Button, Divider, message, Modal, Space } from 'antd';
+import { Button, Divider, message, Modal, Skeleton, Space } from 'antd';
 import { deleteUser, getOAuthInfo, unBindOAuth } from '@/services/userService';
 import { stringify } from 'querystring';
 import { BilibiliOutlined, createFromIconfontCN, GithubOutlined, QqOutlined, WechatOutlined } from '@ant-design/icons';
@@ -17,6 +17,7 @@ const AccountComponent: React.FC = () => {
   const [giteeInfo, setGiteeInfo] = useState<string | undefined>(undefined);
   const [microsoftInfo, setMicrosoftInfo] = useState<string | undefined>(undefined);
   const [bilibiliInfo, setBilibiliInfo] = useState<string | undefined>(undefined);
+  const [showOAuth, setShowOAuth] = useState(false);
   const { initialState, setInitialState } = useModel('@@initialState');
 
   const IconFont = createFromIconfontCN({
@@ -101,6 +102,7 @@ const AccountComponent: React.FC = () => {
       },
     });
   };
+
   const initOAuth = async () => {
     // 映射表，将 id 和对应的状态更新函数关联起来
     const infoSetters: { [key: number]: (desc: string) => void } = {
@@ -111,16 +113,21 @@ const AccountComponent: React.FC = () => {
       6: setMicrosoftInfo,
       7: setBilibiliInfo,
     };
-
     // 并行发出所有的 OAuth 信息请求
     const promises = defaultOAuthData.map(item => getOAuthInfo(item.id));
     const results = await Promise.all(promises);
+
+    // 用于存储启用的 OAuth 项目
+    // @ts-ignore
+    const enabledOAuthItems = [];
 
     // 处理每个请求的结果
     results.forEach((ret, index) => {
       const item = defaultOAuthData[index];
       const id = item.id;
+      const enable = ret?.data?.enable;
       const data = ret?.data?.openId;
+      console.log('OAuth item not binded:', id, enable);
 
       // 检查映射表中是否有对应的 setter 函数
       if (infoSetters[id]) {
@@ -131,10 +138,22 @@ const AccountComponent: React.FC = () => {
           item.desc = '未绑定';
           infoSetters[id]('未绑定');
         }
+        if (enable) {
+          enabledOAuthItems.push(item);
+        }
+        // 如果 enable 为 false，我们不会将其添加到 enabledOAuthItems 中
       } else {
         console.error(`Unknown id: ${id}`);
       }
     });
+
+    // Log enabled items to verify correct filtering
+    // @ts-ignore
+    console.log('Enabled OAuth items:', enabledOAuthItems);
+    // 更新 state 以只包含启用的 OAuth 项目
+    // @ts-ignore
+    setOAuthDataSource(enabledOAuthItems);
+    setShowOAuth(true);
   };
 
   // eslint-disable-next-line react-hooks/rules-of-hooks
@@ -148,100 +167,102 @@ const AccountComponent: React.FC = () => {
     </Helmet>
     <Title level={3}>第三方账号登录管理</Title>
     <Divider />
-    <ProList<OAuthDataItem>
-      rowKey="id"
-      dataSource={oAuthDataSource}
-      onDataSourceChange={setOAuthDataSource}
-      metas={{
-        title: {
-          dataIndex: 'name',
-        },
-        avatar: {
-          dataIndex: 'image',
-        },
-        description: {
-          dataIndex: 'desc',
-        },
-        subTitle: {
-          render: () => {
-            return (
-              <Space size={0}>
-              </Space>
-            );
+    <Skeleton loading={!showOAuth} active paragraph={{ rows: 6 }}>
+      <ProList<OAuthDataItem>
+        rowKey="id"
+        dataSource={oAuthDataSource}
+        onDataSourceChange={setOAuthDataSource}
+        metas={{
+          title: {
+            dataIndex: 'name',
           },
-        },
-        actions: {
-          render: (text, row, index, action) => [
-            <Button
-              type="link"
-              loading={row.desc === 'Loading...'}
-              danger={isBind(row)}
-              onClick={async () => {
-                if (isBind(row)) {
-                  Modal.confirm({
-                    title: '确认解绑',
-                    content: (
-                      <p>该操作无法撤销,请谨慎确认！</p>
-                    ),
-                    async onOk() {
-                      // 删除
-                      const hide = message.loading('解绑中');
-                      try {
-                        const { data } = await unBindOAuth(row.id);
-                        message.success('解绑成功');
-                        // 刷新页面
-                        if (data) {
-                          localStorage.setItem('refreshing', 'refreshing');
-                          setTimeout(() => {
-                            window.location.reload();
-                            localStorage.removeItem('refreshing');
-                          }, 300);
+          avatar: {
+            dataIndex: 'image',
+          },
+          description: {
+            dataIndex: 'desc',
+          },
+          subTitle: {
+            render: () => {
+              return (
+                <Space size={0}>
+                </Space>
+              );
+            },
+          },
+          actions: {
+            render: (text, row, index, action) => [
+              <Button
+                type="link"
+                loading={row.desc === 'Loading...'}
+                danger={isBind(row)}
+                onClick={async () => {
+                  if (isBind(row)) {
+                    Modal.confirm({
+                      title: '确认解绑',
+                      content: (
+                        <p>该操作无法撤销,请谨慎确认！</p>
+                      ),
+                      async onOk() {
+                        // 删除
+                        const hide = message.loading('解绑中');
+                        try {
+                          const { data } = await unBindOAuth(row.id);
+                          message.success('解绑成功');
+                          // 刷新页面
+                          if (data) {
+                            localStorage.setItem('refreshing', 'refreshing');
+                            setTimeout(() => {
+                              window.location.reload();
+                              localStorage.removeItem('refreshing');
+                            }, 300);
+                          }
+                        } catch (e: any) {
+                          message.error(e.message);
+                        } finally {
+                          hide();
                         }
-                      } catch (e: any) {
-                        message.error(e.message);
-                      } finally {
-                        hide();
-                      }
-                    },
-                  });
-                } else {
-                  const hide = message.loading('跳转中');
-                  localStorage.setItem('refreshing', 'refreshing');
-                  localStorage.setItem('redirect', window.location.href);
-                  if (row.id === 1) {
-                    // WeChat
-                    window.location.href = BASE_URL + '/oauth/wechat';
-                  } else if (row.id === 2) {
-                    // QQ
-                    window.location.href = BASE_URL + '/oauth/qq';
-                  } else if (row.id === 3) {
-                    // GitHub
-                    window.location.href = BASE_URL + '/oauth/github';
-                  } else if (row.id === 5) {
-                    // Gitee
-                    window.location.href = BASE_URL + '/oauth/gitee';
-                  } else if (row.id === 6) {
-                    // Microsoft
-                    window.location.href = BASE_URL + '/oauth/microsoft';
-                  } else if (row.id === 7) {
-                    // Bilibili
-                    window.location.href = BASE_URL + '/oauth/bilibili';
+                      },
+                    });
+                  } else {
+                    const hide = message.loading('跳转中');
+                    localStorage.setItem('refreshing', 'refreshing');
+                    localStorage.setItem('redirect', window.location.href);
+                    if (row.id === 1) {
+                      // WeChat
+                      window.location.href = BASE_URL + '/oauth/wechat';
+                    } else if (row.id === 2) {
+                      // QQ
+                      window.location.href = BASE_URL + '/oauth/qq';
+                    } else if (row.id === 3) {
+                      // GitHub
+                      window.location.href = BASE_URL + '/oauth/github';
+                    } else if (row.id === 5) {
+                      // Gitee
+                      window.location.href = BASE_URL + '/oauth/gitee';
+                    } else if (row.id === 6) {
+                      // Microsoft
+                      window.location.href = BASE_URL + '/oauth/microsoft';
+                    } else if (row.id === 7) {
+                      // Bilibili
+                      window.location.href = BASE_URL + '/oauth/bilibili';
+                    }
+                    setTimeout(() => {
+                      localStorage.removeItem('refreshing');
+                    }, 300);
+                    hide();
                   }
-                  setTimeout(() => {
-                    localStorage.removeItem('refreshing');
-                  }, 300);
-                  hide();
                 }
-              }
-              }
-              key="link"
-            >
-              {row.desc === 'Loading...' ? 'Loading...' : isBind(row) ? '解绑' : '绑定'}
-            </Button>,
-          ],
-        },
-      }}
-    />
+                }
+                key="link"
+              >
+                {row.desc === 'Loading...' ? 'Loading...' : isBind(row) ? '解绑' : '绑定'}
+              </Button>,
+            ],
+          },
+        }}
+      />
+    </Skeleton>
     <Title level={3} type="danger">注销账户</Title>
     <Divider />
     <Button danger onClick={onDeleteClick}>注销您的账户</Button>

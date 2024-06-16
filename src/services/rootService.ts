@@ -32,3 +32,13 @@ export async function postNotify(params: RootType.NotifyRequest) {
     params: params,
   });
 }
+
+export async function getEnableOAuthList() {
+  return request<BaseResponse<number[]>>('/oauth/enablelist', {
+    method: 'GET',
+    headers: {
+      'Content-Type': 'application/json',
+      'time': new Date().getTime(),
+    },
+  });
+}
