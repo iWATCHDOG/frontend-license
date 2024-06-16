@@ -101,77 +101,40 @@ const AccountComponent: React.FC = () => {
       },
     });
   };
-
   const initOAuth = async () => {
-    for (const item of defaultOAuthData) {
-      try {
-        const ret = await getOAuthInfo(item.id);
-        if (ret.code === 1) {
-          if (ret.data) {
-            item.desc = ret.data;
-            setWechatInfo(ret.data);
-          } else {
-            item.desc = '未绑定';
-            setWechatInfo('未绑定');
-          }
-        } else if (item.id === 2) {
-          if (ret.data) {
-            item.desc = ret.data;
-            setQqInfo(ret.data);
-          } else {
-            item.desc = '未绑定';
-            setQqInfo('未绑定');
-          }
-        } else if (item.id === 3) {
-          if (ret.data) {
-            item.desc = ret.data;
-            setGithubInfo(ret.data);
-          } else {
-            item.desc = '未绑定';
-            setGithubInfo('未绑定');
-          }
-        } else if (item.id === 5) {
-          if (ret.data) {
-            item.desc = ret.data;
-            setGiteeInfo(ret.data);
-          } else {
-            item.desc = '未绑定';
-            setGiteeInfo('未绑定');
-          }
-        } else if (item.id === 6) {
-          if (ret.data) {
-            item.desc = ret.data;
-            setMicrosoftInfo(ret.data);
-          } else {
-            item.desc = '未绑定';
-            setMicrosoftInfo('未绑定');
-          }
-        } else if (item.id === 7) {
-          if (ret.data) {
-            item.desc = ret.data;
-            setBilibiliInfo(ret.data);
-          } else {
-            item.desc = '未绑定';
-            setBilibiliInfo('未绑定');
-          }
+    // 映射表，将 id 和对应的状态更新函数关联起来
+    const infoSetters: { [key: number]: (desc: string) => void } = {
+      1: setWechatInfo,
+      2: setQqInfo,
+      3: setGithubInfo,
+      5: setGiteeInfo,
+      6: setMicrosoftInfo,
+      7: setBilibiliInfo,
+    };
+
+    // 并行发出所有的 OAuth 信息请求
+    const promises = defaultOAuthData.map(item => getOAuthInfo(item.id));
+    const results = await Promise.all(promises);
+
+    // 处理每个请求的结果
+    results.forEach((ret, index) => {
+      const item = defaultOAuthData[index];
+      const id = item.id;
+      const data = ret?.data?.openId;
+
+      // 检查映射表中是否有对应的 setter 函数
+      if (infoSetters[id]) {
+        if (data) {
+          item.desc = data;
+          infoSetters[id](data);
+        } else {
+          item.desc = '未绑定';
+          infoSetters[id]('未绑定');
         }
-      } catch (e: any) {
-        item.desc = '未绑定';
-        if (item.id === 1) {
-          setWechatInfo('未绑定');
-        } else if (item.id === 2) {
-          setQqInfo('未绑定');
-        } else if (item.id === 3) {
-          setGithubInfo('未绑定');
-        } else if (item.id === 5) {
-          setGiteeInfo('未绑定');
-        } else if (item.id === 6) {
-          setMicrosoftInfo('未绑定');
-        } else if (item.id === 7) {
-          setBilibiliInfo('未绑定');
-        }
+      } else {
+        console.error(`Unknown id: ${id}`);
       }
-    }
+    });
   };
 
   // eslint-disable-next-line react-hooks/rules-of-hooks

@@ -123,7 +123,7 @@ const UserComponent: React.FC = () => {
           新建
         </Button>,
         <a key="2" href={BASE_URL + '/admin/download/user'} target={'_blank'} rel="noreferrer">
-          <Button key={3}>导出</Button>
+          <Button key={2}>导出</Button>
         </a>,
       ]}
       request={async (params, sorter, filter) => {

@@ -32,6 +32,11 @@ declare namespace UserType {
     updateTime?: Date;
   }
 
+  interface OAuthInfo {
+    type: number;
+    openId?: string;
+  }
+
   /**
    * 用户登录请求
    */

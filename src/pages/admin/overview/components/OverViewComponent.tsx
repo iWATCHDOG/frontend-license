@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Helmet, useModel } from '@@/exports';
 import Title from 'antd/es/typography/Title';
 import CountUp from 'react-countup';
-import { Button, Card, Col, Divider, message, Row, Select, Statistic } from 'antd';
+import { Button, Card, Col, Divider, message, Row, Select, Space, Statistic } from 'antd';
 import { countBlacklist, countLog, countSecurityLog, countUser, getChartData } from '@/services/adminService';
 import {
   getBlacklistCount,
@@ -49,29 +49,39 @@ const OverViewComponent: React.FC = () => {
     if (!refreshingCount) {
       try {
         setRefreshingCount(true);
-        const uc = await countUser();
-        const sc = await countSecurityLog();
-        const bc = await countBlacklist();
+
+        // 构造图表请求参数
+        const cr = {
+          type: chartType,
+          days: days,
+        } as AdminType.ChartRequest;
+
+        // 并行发出计数请求
+        const [uc, sc, bc, rc, cd] = await Promise.all([
+          countUser(),
+          countSecurityLog(),
+          countBlacklist(),
+          countLog(),
+          getChartData(cr),
+        ]);
+
+        // 设置获取到的计数
         setUserCount(uc.data);
         setSecurityCount(sc.data);
         setBlacklistCount(bc.data);
-        const rc = await countLog();
         setLogCount(rc.data);
+        setData(cd.data);
       } catch (ignore) {
+        // 在发生错误时设置默认的错误值
         setUserCount(-9999);
         setLogCount(-9999);
         setSecurityCount(-9999);
         setBlacklistCount(-9999);
       } finally {
+        // 无论请求成功还是失败，最后都会将 refreshingCount 设置为 false
         setRefreshingCount(false);
       }
     }
-    const cr = {
-      type: chartType,
-      days: days,
-    } as AdminType.ChartRequest;
-    const cd = await getChartData(cr);
-    setData(cd.data);
   };
 
   useEffect(() => {
@@ -148,30 +158,43 @@ const OverViewComponent: React.FC = () => {
         />
       </div>
       <div style={{ textAlign: 'right' }}>
-        <Select
-          defaultValue={7}
-          style={{ width: 80 }}
-          onChange={async (value) => {
-            const hide = message.loading('更新数据中');
-            setDays(value);
-            const cr = {
-              type: chartType,
-              days: value,
-            } as AdminType.ChartRequest;
-            const cd = await getChartData(cr);
-            setData(cd.data);
-            hide();
-            message.success('数据更新成功');
-          }}
-          size={'small'}
-          options={[
-            { value: 7, label: '7天' },
-            { value: 30, label: '30天' },
-            { value: 90, label: '90天' },
-            { value: 180, label: '180天' },
-            { value: 360, label: '360天' },
-          ]}
-        />
+        <Space>
+          <Button
+            key="4"
+            size={'small'}
+            onClick={() => {
+              // @ts-ignore
+              ref.current?.downloadImage();
+            }}
+          >
+            导出
+          </Button>
+          <Select
+            defaultValue={7}
+            style={{ width: 80 }}
+            onChange={async (value) => {
+              const hide = message.loading('更新数据中');
+              setDays(value);
+              const cr = {
+                type: chartType,
+                days: value,
+              } as AdminType.ChartRequest;
+              const cd = await getChartData(cr);
+              setData(cd.data);
+              hide();
+              message.success('数据更新成功');
+            }}
+            size={'small'}
+            options={[
+              { value: 7, label: '7天' },
+              { value: 30, label: '30天' },
+              { value: 90, label: '90天' },
+              { value: 120, label: '120天' },
+              { value: 180, label: '180天' },
+              { value: 360, label: '360天' },
+            ]}
+          />
+        </Space>
       </div>
     </div>
     <Divider />

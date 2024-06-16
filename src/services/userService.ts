@@ -188,7 +188,7 @@ export async function deleteUser() {
 }
 
 export async function getOAuthInfo(type: number) {
-  return request<BaseResponse<string>>('/oauth/info', {
+  return request<BaseResponse<UserType.OAuthInfo>>('/oauth/info', {
     method: 'GET',
     headers: {
       'Content-Type': 'application/json',
